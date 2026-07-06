@@ -23,14 +23,15 @@ Pour cela, il faut séparer clairement :
 ## 3. Les acteurs du système
 
 ```text
-[CONTROLE / ORCHESTRATION]
-    -> décide des scènes et des événements
-    -> envoie les commandes de temps réel
+[PARTIE ANIMATION]
+    -> conçoit et gère les contenus visuels et artistiques
+    -> pilote l’aspect “view” du logiciel d’animation
+    -> est assurée par le Dev 1 et le Dev 2
 
-[RENDER / AFFICHAGE]
-    -> reçoit les commandes
-    -> affiche les contenus visuels / lumineux
-    -> prépare la sortie utilisateur
+[PARTIE ROUTAGE]
+    -> gère la logique de distribution, de connexion et de routage
+    -> pilote le logiciel dédié au routage
+    -> est assurée par le Dev 3 et le Dev 4
 
 [DISPOSITIFS / APPAREILS]
     -> reçoivent les ordres réseau ou protocolaires

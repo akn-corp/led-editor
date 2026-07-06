@@ -84,10 +84,16 @@ Il faut prévoir :
 - garder un log de communication.
 
 ## 10. Recommandation concrète pour votre cas
-Le plus propre est de rendre le protocole partagé entre les deux repos. Par exemple :
+Le plus propre est de rendre le protocole partagé entre les deux logiciels. Par exemple :
 - un fichier common/protocol.json ou un contrat commun ;
 - un module C# partagé si les deux projets sont en .NET ;
 - ou un mini service de message standard basé sur JSON sur TCP/UDP/OSC.
+
+Dans votre cas précis, cette communication doit relier :
+- le logiciel d’animation (partie view / conception artistique) ;
+- le logiciel de routage (partie logique de distribution et de pilotage).
+
+Ainsi, l’animation peut envoyer des commandes ou des états, et le routage peut les transformer en instructions de circulation et de pilotage vers les dispositifs.
 
 ## 11. Critère de réussite
 La communication sera réussie si :

@@ -33,6 +33,19 @@ Plusieurs profils sont impliqués :
 - installation physique : câblage, fixation, alimentation ;
 - exploitation : mise en route, réglages, tests, dépannage.
 
+## 4.1 Répartition du travail par binôme
+Comme le projet repose sur deux logiciels distincts, l’équipe est organisée en deux binômes :
+- Développeur 1 et Développeur 2 : partie animation / logiciel de gestion de l’animation ;
+- Développeur 3 et Développeur 4 : partie routage / logiciel de gestion du routage.
+
+Dans cette organisation :
+- le Dev 1 et le Dev 2 travaillent sur la partie animation, la logique de view, les contenus et l’interface liée à l’affichage artistique ;
+- le Dev 3 et le Dev 4 travaillent sur la partie routage, la logique de distribution, de connexion et de pilotage des dispositifs.
+
+Cette répartition est cohérente avec la logique du projet :
+- la partie animation couvre la création, l’ordonnancement et l’affichage des contenus visuels et artistiques ;
+- la partie routage couvre la logique de circulation, de distribution, de connexion et de pilotage des dispositifs.
+
 ## 5. L’architecture fonctionnelle générale
 Le projet peut être découpé en 4 couches principales :
 
