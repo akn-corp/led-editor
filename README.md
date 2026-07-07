@@ -104,16 +104,7 @@ Le système doit être conçu pour évoluer :
 - modifier les contenus ;
 - intégrer de nouveaux protocoles.
 
-## 8. Documentation fournie
-La documentation détaillée est répartie comme suit :
-- [Docs/0-COMMENT-MARCHE-LE-PROJET.md](Docs/0-COMMENT-MARCHE-LE-PROJET.md)
-- [Docs/1-DEV1-ORCHESTRATION-ET-CONTROLE.md](Docs/1-DEV1-ORCHESTRATION-ET-CONTROLE.md)
-- [Docs/2-DEV2-RESEAU-ET-COMMUNICATION-ENTRE-REPOS.md](Docs/2-DEV2-RESEAU-ET-COMMUNICATION-ENTRE-REPOS.md)
-- [Docs/3-DEV3-RENDER-ET-AFFICHAGE.md](Docs/3-DEV3-RENDER-ET-AFFICHAGE.md)
-- [Docs/4-DEV4-INTEGRATION-TESTS-DEPLOIEMENT.md](Docs/4-DEV4-INTEGRATION-TESTS-DEPLOIEMENT.md)
-- [stack-recommander.md](stack-recommander.md)
-
-## 9. Recommandation de départ
+## 8. Recommandation de départ
 Pour avancer proprement, il est conseillé de :
 - définir un périmètre fonctionnel clair ;
 - séparer les responsabilités entre contrôle, rendu et dispositifs ;
