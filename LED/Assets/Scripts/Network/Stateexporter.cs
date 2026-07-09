@@ -1,5 +1,3 @@
-// Assets/Scripts/Network/StateExporter.cs
-//
 // S'abonne aux changements de couleur de EntityManager, accumule les
 // entités modifiées, et envoie un seul paquet UDP toutes les ~25ms (40Hz)
 // contenant uniquement ce qui a changé depuis le dernier envoi.

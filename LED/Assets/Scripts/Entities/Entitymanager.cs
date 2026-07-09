@@ -44,6 +44,11 @@ public class EntityManager : MonoBehaviour
             return;
         }
 
+        if (state.R == r && state.G == g && state.B == b)
+        {
+            return;
+        }
+
         state.R = r;
         state.G = g;
         state.B = b;

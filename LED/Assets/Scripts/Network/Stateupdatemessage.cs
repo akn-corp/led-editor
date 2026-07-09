@@ -1,5 +1,3 @@
-// Assets/Scripts/Network/StateUpdateMessage.cs
-//
 // Structures sérialisables (JsonUtility) correspondant au format défini dans
 // le contrat d'interface (section 4.2) : STATE_UPDATE + seq + liste d'entités.
 
