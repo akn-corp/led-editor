@@ -1,16 +1,23 @@
-using UnityEngine;
+// Assets/Scripts/Network/StateUpdateMessage.cs
+//
+// Structures sérialisables (JsonUtility) correspondant au format défini dans
+// le contrat d'interface (section 4.2) : STATE_UPDATE + seq + liste d'entités.
 
-public class Stateupdatemessage : MonoBehaviour
+using System;
+
+[Serializable]
+public class StateEntityData
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    public int id;
+    public int r;
+    public int g;
+    public int b;
+}
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+[Serializable]
+public class StateUpdateMessage
+{
+    public string type = "STATE_UPDATE";
+    public int seq;
+    public StateEntityData[] entities;
 }
