@@ -1,0 +1,62 @@
+# Ignore only Unity generated files/folders for the nested project in LED/
+# Keep code and assets in LED/Assets, LED/Packages, LED/ProjectSettings, etc.
+
+# Generated Unity folders
+/LED/Library/
+/LED/Temp/
+/LED/Obj/
+/LED/Build/
+/LED/Builds/
+/LED/Logs/
+/LED/UserSettings/
+
+# Editor and IDE generated files for the nested Unity project
+/LED/.vs/
+/LED/*.csproj
+/LED/*.sln
+/LED/*.slnx
+/LED/*.suo
+/LED/*.tmp
+/LED/*.user
+/LED/*.userprefs
+/LED/*.pidb
+/LED/*.opendb
+/LED/*.VC.db
+
+# Unity-generated binary/artifact files inside the nested project
+/LED/*.pdb
+/LED/*.mdb
+/LED/*.pidb.meta
+/LED/*.pdb.meta
+/LED/*.mdb.meta
+/LED/sysinfo.txt
+/LED/mono_crash.*
+
+# Unity build output
+/LED/*.apk
+/LED/*.aab
+/LED/*.unitypackage
+/LED/*.unitypackage.meta
+/LED/*.app
+
+# Addressables default ignores inside the nested project
+/LED/ServerData
+/LED/Assets/StreamingAssets/aa*
+/LED/Assets/AddressableAssetsData/link.xml*
+/LED/Assets/AddressableAssetsData/Addressables_Temp*
+/LED/Assets/AddressableAssetsData/*/*.bin*
+
+# Visual Scripting auto-generated files
+/LED/Assets/Unity.VisualScripting.Generated/VisualScripting.Flow/UnitOptions.db
+/LED/Assets/Unity.VisualScripting.Generated/VisualScripting.Flow/UnitOptions.db.meta
+/LED/Assets/Unity.VisualScripting.Generated/VisualScripting.Core/Property Providers
+/LED/Assets/Unity.VisualScripting.Generated/VisualScripting.Core/Property Providers.meta
+
+# Auto-generated scenes by play mode tests
+/LED/Assets/InitTestScene*.unity*
+
+# Auto-generated cache in Assets folder
+/LED/Assets/SceneDependencyCache*
+
+# Keep Unity source code, scenes and meta files tracked
+# (no rule here to ignore LED/Assets/**, LED/Packages/**, LED/ProjectSettings/**, etc.)
