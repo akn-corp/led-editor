@@ -56,6 +56,15 @@ public class EntityManager : MonoBehaviour
         OnColorChanged?.Invoke(id);
     }
 
+    /// <summary>Mise à jour en masse sans déclencher OnColorChanged (fluid, etc.).</summary>
+    public void SetColorSilent(int id, byte r, byte g, byte b)
+    {
+        if (!_entities.TryGetValue(id, out var state)) return;
+        state.R = r;
+        state.G = g;
+        state.B = b;
+    }
+
     public ColorState GetColor(int id)
     {
         _entities.TryGetValue(id, out var state);

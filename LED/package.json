@@ -1,0 +1,11 @@
+{
+  "name": "led-unity-project",
+  "private": true,
+  "description": "Scripts de test Node (depuis le dossier Unity LED/)",
+  "scripts": {
+    "test:protocol": "node tools/validate-state-protocol.js",
+    "test:wall": "node tools/validate-wall-chunks.js",
+    "test:routing": "node tools/test-unity-leds-routing.js",
+    "test:routing:live": "node tools/test-unity-leds-routing.js --live"
+  }
+}

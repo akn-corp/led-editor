@@ -104,7 +104,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6785a030411721e43b570536d95756b9, type: 3}
   m_Name: EntityColorClip
   m_EditorClassIdentifier: Assembly-CSharp::EntityColorClip
-  firstEntityId: 3
+  firstEntityId: 100
   entityCount: 3
   color: {r: 0, g: 1, b: 0, a: 1}
 --- !u!114 &-1703908050823895587
