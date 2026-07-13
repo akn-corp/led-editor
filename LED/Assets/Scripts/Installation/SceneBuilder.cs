@@ -1,5 +1,10 @@
 // Assets/Scripts/Installation/SceneBuilder.cs
 //
+// [ExecuteAlways] : ce script s'exécute aussi en mode Édition (hors Play
+// Mode), pas seulement pendant le jeu. C'est ce qui permet à la grille
+// LED de servir de "canevas" visible en permanence dans l'éditeur, sur
+// lequel on peut composer une Timeline en la scrubant sans lancer le Play.
+//
 // Remplace QuickVisualTest.cs (script jetable de l'étape précédente).
 // Instancie un GameObject (quad plat) par entité chargée depuis la config,
 // avec un matériau "Unlit" (non affecté par l'éclairage de la scène) pour
@@ -8,6 +13,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[ExecuteAlways]
 public class SceneBuilder : MonoBehaviour
 {
     [SerializeField] private EntityManager entityManager;
@@ -23,9 +29,16 @@ public class SceneBuilder : MonoBehaviour
 
     private readonly Dictionary<int, GameObject> _entityVisuals = new Dictionary<int, GameObject>();
     private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor"); // URP Unlit
+    private bool _built;
 
     void Start()
     {
+        // Garde anti-duplication : Start() peut être appelé plusieurs fois
+        // en mode Édition (recompilation de script, activation/désactivation
+        // du GameObject...). Sans cette garde, on recréerait une grille
+        // entière à chaque fois.
+        if (_built) return;
+
         if (entityManager == null || installationLoader == null)
         {
             Debug.LogError("[SceneBuilder] Références manquantes dans l'Inspector (EntityManager / InstallationLoader).");
@@ -48,11 +61,22 @@ public class SceneBuilder : MonoBehaviour
             quad.transform.localScale = Vector3.one * ledScale;
             quad.transform.SetParent(transform);
 
+            // En mode Édition, on ne veut pas que ces 1000+ objets générés
+            // soient sauvegardés dans le fichier .unity à chaque Ctrl+S —
+            // ce sont des visuels reconstruits à la volée, pas des données
+            // de scène réelles. DontSaveInEditor les exclut de la sauvegarde
+            // sans les cacher de la Hierarchy pendant que tu travailles.
+            if (!Application.isPlaying)
+                quad.hideFlags = HideFlags.DontSaveInEditor;
+
             // Matériau Unlit : couleur affichée telle quelle, sans ombre ni
-            // reflet — comme un vrai pixel de LED.
-            var renderer = quad.GetComponent<Renderer>();
-            renderer.material = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
-            renderer.material.color = Color.black; // éteint par défaut
+            // reflet — comme un vrai pixel de LED. On construit le matériau
+            // dans une variable locale avant de l'assigner (via
+            // sharedMaterial) pour éviter que Unity ne le considère comme
+            // "à dupliquer" en mode Édition.
+            var material = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
+            material.color = Color.black; // éteint par défaut
+            quad.GetComponent<Renderer>().sharedMaterial = material;
 
             _entityVisuals[entityData.id] = quad;
 
@@ -65,10 +89,14 @@ public class SceneBuilder : MonoBehaviour
         CreateBackground(minX, maxX, minY, maxY);
 
         entityManager.OnColorChanged += OnEntityColorChanged;
+        _built = true;
 
         Debug.Log($"[SceneBuilder] {config.entities.Length} entités chargées et affichées.");
 
-        if (runQuickValidationTest)
+        // Le test de validation automatique n'a de sens qu'en Play Mode
+        // (Invoke ne fonctionne pas hors Play, et on ne veut pas de
+        // changement automatique de couleur pendant l'édition).
+        if (runQuickValidationTest && Application.isPlaying)
         {
             Invoke(nameof(TriggerValidationColor), testDelaySeconds);
         }
@@ -89,9 +117,12 @@ public class SceneBuilder : MonoBehaviour
         background.transform.position = new Vector3(centerX, centerY, 0.05f);
         background.transform.localScale = new Vector3(width, height, 1f);
 
-        var renderer = background.GetComponent<Renderer>();
-        renderer.material = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
-        renderer.material.color = backgroundColor;
+        if (!Application.isPlaying)
+            background.hideFlags = HideFlags.DontSaveInEditor;
+
+        var material = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
+        material.color = backgroundColor;
+        background.GetComponent<Renderer>().sharedMaterial = material;
     }
 
     private void TriggerValidationColor()
@@ -122,7 +153,7 @@ public class SceneBuilder : MonoBehaviour
             (state.G / 255f) * glowIntensity,
             (state.B / 255f) * glowIntensity
         );
-        quad.GetComponent<Renderer>().material.color = color;
+        quad.GetComponent<Renderer>().sharedMaterial.color = color;
     }
 
     void OnDestroy()
