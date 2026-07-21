@@ -1,46 +1,34 @@
-// Assets/Scripts/Installation/InstallationLoader.cs
-//
-// Charge un fichier de config JSON décrivant l'installation (liste d'entités
-// + positions). Le fichier doit être placé dans un dossier "Resources" pour
-// être garanti disponible aussi bien dans l'éditeur que dans un build final.
-//
-// Exemple de chemin : Assets/Resources/Configs/installation-test.json
-//   -> configResourcePath = "Configs/installation-test" (sans extension)
+// Charge wall-bands.json — mur Glassworks (entités ≥ 100, 16 576 LEDs).
 
 using UnityEngine;
 
 public class InstallationLoader : MonoBehaviour
 {
-    [SerializeField] private string configResourcePath = "Configs/installation-test";
+    [SerializeField] private string wallBandsResourcePath = "Configs/wall-bands";
 
-    /// <summary>
-    /// Charge et parse le fichier de config. Retourne null si le fichier est
-    /// introuvable ou invalide (avec un log d'erreur explicite).
-    /// </summary>
-    public InstallationConfig LoadConfig()
+    public WallBandsConfig LoadWallBandsConfig()
     {
-        var textAsset = Resources.Load<TextAsset>(configResourcePath);
-
+        var textAsset = Resources.Load<TextAsset>(wallBandsResourcePath);
         if (textAsset == null)
         {
-            Debug.LogError($"[InstallationLoader] Fichier introuvable : Resources/{configResourcePath}.json");
+            Debug.LogError($"[InstallationLoader] Fichier introuvable : Resources/{wallBandsResourcePath}.json");
             return null;
         }
 
-        InstallationConfig config;
+        WallBandsConfig config;
         try
         {
-            config = JsonUtility.FromJson<InstallationConfig>(textAsset.text);
+            config = JsonUtility.FromJson<WallBandsConfig>(textAsset.text);
         }
         catch (System.Exception e)
         {
-            Debug.LogError($"[InstallationLoader] JSON invalide : {e.Message}");
+            Debug.LogError($"[InstallationLoader] JSON wall-bands invalide : {e.Message}");
             return null;
         }
 
-        if (config?.entities == null || config.entities.Length == 0)
+        if (config?.bands == null || config.bands.Length == 0)
         {
-            Debug.LogError("[InstallationLoader] Config vide ou mal formée.");
+            Debug.LogError("[InstallationLoader] wall-bands.json vide ou mal formé.");
             return null;
         }
 

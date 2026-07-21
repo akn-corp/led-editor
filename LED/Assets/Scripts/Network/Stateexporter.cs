@@ -1,31 +1,29 @@
-// S'abonne aux changements de couleur de EntityManager, accumule les
-// entités modifiées, et envoie un seul paquet UDP toutes les ~25ms (40Hz)
-// contenant uniquement ce qui a changé depuis le dernier envoi.
-//
-// Pour l'instant, cible un script d'écoute local de test (127.0.0.1), en
-// attendant que le vrai logiciel de routage existe.
+// Envoie le full state LEDS en UDP à 40 Hz vers led-routing-hub (port 6455).
+// Chaque frame contient tous les chunks LEDS (pas de delta).
 
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using UnityEngine;
 
 public class StateExporter : MonoBehaviour
 {
     [SerializeField] private EntityManager entityManager;
 
-    [Header("Cible réseau (test local pour l'instant)")]
+    [Header("Cible réseau (led-routing-hub)")]
     [SerializeField] private string targetIp = "127.0.0.1";
-    [SerializeField] private int targetPort = 9999; // volontairement différent du port ArtNet (6454)
+    [SerializeField] private int targetPort = StateProtocol.StatePort;
 
-    [SerializeField] private float sendIntervalSeconds = 1f / 40f; // ~40Hz
+    [SerializeField] private float sendIntervalSeconds = 1f / 40f;
 
-    private readonly HashSet<int> _changedEntityIds = new HashSet<int>();
+    [Header("Debug")]
+    [SerializeField] private bool logEveryFrame;
+
     private UdpClient _client;
     private IPEndPoint _endpoint;
     private float _timer;
-    private int _seq;
+    private ushort _frameId;
+    private bool _loggedFirstSend;
 
     void OnEnable()
     {
@@ -36,22 +34,21 @@ public class StateExporter : MonoBehaviour
             return;
         }
 
-        entityManager.OnColorChanged += OnEntityColorChanged;
+        if (targetPort != StateProtocol.StatePort)
+        {
+            Debug.LogWarning($"[StateExporter] targetPort corrigé {targetPort} → {StateProtocol.StatePort}");
+            targetPort = StateProtocol.StatePort;
+        }
+
         _client = new UdpClient();
         _endpoint = new IPEndPoint(IPAddress.Parse(targetIp), targetPort);
+        Debug.Log($"[StateExporter] Prêt — cible {targetIp}:{targetPort} @ {1f / sendIntervalSeconds:F0} Hz");
     }
 
     void OnDisable()
     {
-        if (entityManager != null)
-            entityManager.OnColorChanged -= OnEntityColorChanged;
-
         _client?.Close();
-    }
-
-    private void OnEntityColorChanged(int id)
-    {
-        _changedEntityIds.Add(id);
+        _client = null;
     }
 
     void Update()
@@ -60,34 +57,26 @@ public class StateExporter : MonoBehaviour
         if (_timer < sendIntervalSeconds) return;
         _timer = 0f;
 
-        if (_changedEntityIds.Count == 0) return; // rien à envoyer ce tour-ci
+        if (entityManager == null || _client == null) return;
 
-        var message = new StateUpdateMessage
+        List<byte[]> packets = StateProtocol.EncodeLedFrame(_frameId, entityManager);
+        int currentFrameId = _frameId;
+        _frameId++;
+
+        if (packets.Count == 0) return;
+
+        foreach (byte[] packet in packets)
         {
-            seq = _seq++,
-            entities = BuildEntityList()
-        };
-
-        string json = JsonUtility.ToJson(message);
-        byte[] data = Encoding.UTF8.GetBytes(json);
-        _client.Send(data, data.Length, _endpoint);
-
-        Debug.Log($"[StateExporter] Envoyé seq={message.seq}, {message.entities.Length} entité(s) : {json}");
-
-        _changedEntityIds.Clear();
-    }
-
-    private StateEntityData[] BuildEntityList()
-    {
-        var list = new StateEntityData[_changedEntityIds.Count];
-        int i = 0;
-        foreach (var id in _changedEntityIds)
-        {
-            var state = entityManager.GetColor(id);
-            if (state == null) continue;
-
-            list[i++] = new StateEntityData { id = id, r = state.R, g = state.G, b = state.B };
+            _client.Send(packet, packet.Length, _endpoint);
         }
-        return list;
+
+        if (logEveryFrame || !_loggedFirstSend)
+        {
+            _loggedFirstSend = true;
+            byte[] first = packets[0];
+            Debug.Log(
+                $"[StateExporter] LEDS frameId={currentFrameId}, chunks={packets.Count}, " +
+                $"1er paquet={first.Length} octets, magic={System.Text.Encoding.ASCII.GetString(first, 0, 4)}");
+        }
     }
 }
