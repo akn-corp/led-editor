@@ -31,8 +31,8 @@ Assets/
 │       └── CommandClient.cs      # canal Commandes (TCP)
 ├── Scenes/
 │   └── Main.unity           # ⚠️ à créer/modifier uniquement depuis Unity, jamais à la main
-├── Configs/                 # fichiers de configuration d'installation (JSON)
-│   └── installation-test.json
+├── Configs/                 # configuration mur Glassworks
+│   └── wall-bands.json
 ├── Prefabs/                 # prefabs des entités/illuminateurs
 └── Audio/                   # fichiers audio de test pour la synchronisation
 
