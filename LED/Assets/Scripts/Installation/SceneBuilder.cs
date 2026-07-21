@@ -1,6 +1,13 @@
-// Mur Glassworks 128×128 — texture LED + animations (fluide / typo cinétique).
+// Mur Glassworks 128×128 — texture LED + animations.
+//
+// Montage Timeline (recommandé) :
+//   animationMode = None
+//   → LedWallTextPainter est toujours créé sur LedWall
+//   → EntityTextTrackBinder relie auto les pistes Entity Text au painter
+//   → Add Entity Text Clip (texte, fades, OnStart/OnEnd dans l'Inspector)
 
 using UnityEngine;
+using UnityEngine.Playables;
 
 [ExecuteAlways]
 public class SceneBuilder : MonoBehaviour
@@ -17,7 +24,8 @@ public class SceneBuilder : MonoBehaviour
     }
 
     [Header("Animation mur")]
-    [SerializeField] private WallAnimationMode animationMode = WallAnimationMode.KineticTypography;
+    [Tooltip("None = Timeline pilote le mur (EntityColor / EntityText). Kinetic = démo auto hors Timeline.")]
+    [SerializeField] private WallAnimationMode animationMode = WallAnimationMode.None;
 
     [Header("Test de validation (à désactiver une fois vérifié)")]
     [SerializeField] private bool runQuickValidationTest = false;
@@ -25,6 +33,7 @@ public class SceneBuilder : MonoBehaviour
     [SerializeField] private float testDelaySeconds = 2f;
 
     private LedWallVisualizer _wallVisualizer;
+    private LedWallTextPainter _textPainter;
     private bool _built;
 
     void Start()
@@ -48,31 +57,50 @@ public class SceneBuilder : MonoBehaviour
         _wallVisualizer = wallGo.AddComponent<LedWallVisualizer>();
         _wallVisualizer.Build(entityManager, config, wallCellSize);
 
+        // Toujours dispo pour binding Timeline Entity Text Track
+        _textPainter = wallGo.AddComponent<LedWallTextPainter>();
+        _textPainter.Initialize(entityManager, _wallVisualizer, config.columns);
+
         bool drivesWall = animationMode != WallAnimationMode.None;
-        _wallVisualizer.SetSuppressSingleUpdates(drivesWall);
+        // Painter active déjà suppress ; Color clips Timeline utilisent SetColor → OK si mode None
+        if (!drivesWall)
+            _wallVisualizer.SetSuppressSingleUpdates(false);
 
         switch (animationMode)
         {
             case WallAnimationMode.Fluid:
             {
+                _wallVisualizer.SetSuppressSingleUpdates(true);
                 var fluid = wallGo.AddComponent<FluidWallAnimator>();
                 fluid.Initialize(entityManager, _wallVisualizer, config.columns);
                 break;
             }
             case WallAnimationMode.KineticTypography:
             {
+                _wallVisualizer.SetSuppressSingleUpdates(true);
                 var kinetic = wallGo.AddComponent<KineticTypographyAnimator>();
                 kinetic.Initialize(entityManager, _wallVisualizer, config.columns);
                 break;
             }
+            case WallAnimationMode.None:
+            default:
+                // Timeline : EntityColorTrack + EntityTextTrack
+                break;
         }
+
+        // LedWall est runtime → binder les Entity Text Track maintenant
+        var director = FindFirstObjectByType<PlayableDirector>();
+        if (director != null)
+            EntityTextTrackBinder.BindAll(director, _textPainter);
 
         if (Application.isPlaying)
             FitCameraToWall(config.columns);
 
         _built = true;
 
-        Debug.Log($"[SceneBuilder] Mur Glassworks chargé — anim={animationMode}.");
+        Debug.Log(
+            $"[SceneBuilder] Mur Glassworks chargé — anim={animationMode}. " +
+            "EntityText : binder LedWall (LedWallTextPainter) sur une Entity Text Track.");
 
         if (runQuickValidationTest && Application.isPlaying && animationMode == WallAnimationMode.None)
             Invoke(nameof(TriggerValidationColor), testDelaySeconds);
