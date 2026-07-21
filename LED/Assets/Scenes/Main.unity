@@ -196,7 +196,7 @@ MonoBehaviour:
   entityManager: {fileID: 1818472465}
   installationLoader: {fileID: 511210557}
   wallCellSize: 0.05
-  runFluidAnimation: 1
+  animationMode: 2
   runQuickValidationTest: 0
   testEntityId: 228
   testDelaySeconds: 2

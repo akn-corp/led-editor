@@ -1,4 +1,4 @@
-// Mur Glassworks 128×128 — texture LED + animation fluide optionnelle.
+// Mur Glassworks 128×128 — texture LED + animations (fluide / typo cinétique).
 
 using UnityEngine;
 
@@ -9,8 +9,15 @@ public class SceneBuilder : MonoBehaviour
     [SerializeField] private InstallationLoader installationLoader;
     [SerializeField] private float wallCellSize = 0.05f;
 
-    [Header("Animation fluide")]
-    [SerializeField] private bool runFluidAnimation = true;
+    public enum WallAnimationMode
+    {
+        None,
+        Fluid,
+        KineticTypography,
+    }
+
+    [Header("Animation mur")]
+    [SerializeField] private WallAnimationMode animationMode = WallAnimationMode.KineticTypography;
 
     [Header("Test de validation (à désactiver une fois vérifié)")]
     [SerializeField] private bool runQuickValidationTest = false;
@@ -40,12 +47,24 @@ public class SceneBuilder : MonoBehaviour
 
         _wallVisualizer = wallGo.AddComponent<LedWallVisualizer>();
         _wallVisualizer.Build(entityManager, config, wallCellSize);
-        _wallVisualizer.SetSuppressSingleUpdates(runFluidAnimation);
 
-        if (runFluidAnimation)
+        bool drivesWall = animationMode != WallAnimationMode.None;
+        _wallVisualizer.SetSuppressSingleUpdates(drivesWall);
+
+        switch (animationMode)
         {
-            var fluid = wallGo.AddComponent<FluidWallAnimator>();
-            fluid.Initialize(entityManager, _wallVisualizer, config.columns);
+            case WallAnimationMode.Fluid:
+            {
+                var fluid = wallGo.AddComponent<FluidWallAnimator>();
+                fluid.Initialize(entityManager, _wallVisualizer, config.columns);
+                break;
+            }
+            case WallAnimationMode.KineticTypography:
+            {
+                var kinetic = wallGo.AddComponent<KineticTypographyAnimator>();
+                kinetic.Initialize(entityManager, _wallVisualizer, config.columns);
+                break;
+            }
         }
 
         if (Application.isPlaying)
@@ -53,9 +72,9 @@ public class SceneBuilder : MonoBehaviour
 
         _built = true;
 
-        Debug.Log("[SceneBuilder] Mur Glassworks chargé.");
+        Debug.Log($"[SceneBuilder] Mur Glassworks chargé — anim={animationMode}.");
 
-        if (runQuickValidationTest && Application.isPlaying && !runFluidAnimation)
+        if (runQuickValidationTest && Application.isPlaying && animationMode == WallAnimationMode.None)
             Invoke(nameof(TriggerValidationColor), testDelaySeconds);
     }
 
