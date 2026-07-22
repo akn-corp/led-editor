@@ -40,7 +40,7 @@ public static class GifToWallMediaImporter
     public static void ImportGif(string absoluteGifPath, string folderName = null)
         => ImportMedia(absoluteGifPath, folderName, showDialogs: true);
 
-    /// <summary>Import silencieux (MCP / automation). Retourne un message de statut.</summary>
+    /// <summary>Import silencieux (automation). Retourne un message de statut.</summary>
     public static string ImportMedia(string absoluteMediaPath, string folderName = null, bool showDialogs = false)
     {
         if (!File.Exists(absoluteMediaPath))
