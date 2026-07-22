@@ -566,6 +566,7 @@ MonoBehaviour:
   targetIp: 127.0.0.1
   targetPort: 6455
   sendIntervalSeconds: 0.025
+  maxCatchUpFrames: 2
   sendDevices: 1
   logEveryFrame: 0
 --- !u!4 &1097684621
