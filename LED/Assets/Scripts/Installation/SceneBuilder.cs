@@ -3,9 +3,10 @@
 // Montage Timeline (recommandé) :
 //   animationMode = None
 //   → LedWallTextPainter est toujours créé sur LedWall
-//   → EntityTextTrackBinder relie auto les pistes Entity Text au painter
+//   → EntityTextTrackBinder relie auto les pistes EntityText au painter
 //   → Add Entity Text Clip (texte, fades, OnStart/OnEnd dans l'Inspector)
 
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Playables;
 
@@ -46,7 +47,22 @@ public class SceneBuilder : MonoBehaviour
             return;
         }
 
-        var config = installationLoader.LoadWallBandsConfig();
+        if (Application.isPlaying)
+            StartCoroutine(BuildRoutine());
+        else
+            BuildWithConfig(installationLoader.LoadWallBandsConfig());
+    }
+
+    IEnumerator BuildRoutine()
+    {
+        WallBandsConfig config = null;
+        yield return installationLoader.LoadWallBandsConfigRoutine(cfg => config = cfg);
+        BuildWithConfig(config);
+    }
+
+    void BuildWithConfig(WallBandsConfig config)
+    {
+        if (_built) return;
         if (config == null) return;
 
         var wallGo = new GameObject("LedWall");
@@ -62,7 +78,6 @@ public class SceneBuilder : MonoBehaviour
         _textPainter.Initialize(entityManager, _wallVisualizer, config.columns);
 
         bool drivesWall = animationMode != WallAnimationMode.None;
-        // Painter active déjà suppress ; Color clips Timeline utilisent SetColor → OK si mode None
         if (!drivesWall)
             _wallVisualizer.SetSuppressSingleUpdates(false);
 
@@ -84,11 +99,9 @@ public class SceneBuilder : MonoBehaviour
             }
             case WallAnimationMode.None:
             default:
-                // Timeline : EntityColorTrack + EntityTextTrack
                 break;
         }
 
-        // LedWall est runtime → binder les Entity Text Track maintenant
         var director = FindFirstObjectByType<PlayableDirector>();
         if (director != null)
             EntityTextTrackBinder.BindAll(director, _textPainter);
@@ -98,9 +111,13 @@ public class SceneBuilder : MonoBehaviour
 
         _built = true;
 
+        string source = installationLoader != null
+            ? installationLoader.LastSource.ToString()
+            : "?";
         Debug.Log(
-            $"[SceneBuilder] Mur Glassworks chargé — anim={animationMode}. " +
-            "EntityText : binder LedWall (LedWallTextPainter) sur une Entity Text Track.");
+            $"[SceneBuilder] Mur Glassworks chargé — anim={animationMode}, source={source}" +
+            (string.IsNullOrEmpty(config.profile) ? "" : $", profil={config.profile}") +
+            ". EntityText : binder LedWall (LedWallTextPainter) sur une EntityText Track.");
 
         if (runQuickValidationTest && Application.isPlaying && animationMode == WallAnimationMode.None)
             Invoke(nameof(TriggerValidationColor), testDelaySeconds);

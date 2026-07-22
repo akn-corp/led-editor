@@ -14,5 +14,7 @@ public class WallBandData
 public class WallBandsConfig
 {
     public int columns;
+    public string generatedFrom;
+    public string profile;
     public WallBandData[] bands;
 }
