@@ -1,11 +1,11 @@
-// Piste dédiée au bandeau Paloma Rumba. Binding : EntityManager.
+// Piste Timeline Paloma Rumba. Binding : LedWall (LedWallVisualizer).
 
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
 
 [TrackClipType(typeof(PalomaRumbaTextClip))]
-[TrackBindingType(typeof(EntityManager))]
+[TrackBindingType(typeof(LedWallVisualizer))]
 [TrackColor(0.9f, 0.75f, 0.15f)]
 public class PalomaRumbaTrack : TrackAsset
 {
@@ -19,8 +19,8 @@ public class PalomaRumbaTrackMixer : PlayableBehaviour
 {
     public override void ProcessFrame(Playable playable, FrameData info, object playerData)
     {
-        var entityManager = playerData as EntityManager;
-        if (entityManager == null) return;
+        var wall = playerData as LedWallVisualizer;
+        if (wall == null || !wall.IsBuilt || wall.EntityManager == null) return;
 
         PalomaRumbaTextBehaviour best = null;
         Playable bestPlayable = default;
@@ -45,6 +45,6 @@ public class PalomaRumbaTrackMixer : PlayableBehaviour
         }
 
         if (best != null)
-            best.Apply(entityManager, (float)bestPlayable.GetTime(), (float)bestPlayable.GetDuration());
+            best.Apply(wall.EntityManager, wall, (float)bestPlayable.GetTime(), (float)bestPlayable.GetDuration());
     }
 }

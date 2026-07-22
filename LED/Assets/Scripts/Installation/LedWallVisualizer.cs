@@ -19,6 +19,9 @@ public class LedWallVisualizer : MonoBehaviour
     private readonly Dictionary<int, Vector2Int> _cellByEntity = new Dictionary<int, Vector2Int>();
     private bool _suppressSingleUpdates;
 
+    public EntityManager EntityManager => _entityManager;
+    public bool IsBuilt => _texture != null && _entityManager != null;
+
     public void ApplyDisplayPixels(Color[] pixels)
     {
         if (_texture == null || pixels == null || pixels.Length != _texture.width * _texture.height) return;
