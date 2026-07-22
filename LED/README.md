@@ -66,10 +66,17 @@ Ces informations n'existent que côté logiciel de routage.
 
 | Canal | Protocole | Fréquence | Contenu |
 |---|---|---|---|
-| État | UDP | ~40x/seconde | Couleur de chaque entité modifiée |
-| Commandes | TCP | Rare | `START_SHOW`, `STOP_SHOW`, `PAUSE`, `RESUME`, `GET_STATUS` |
+| État | UDP **6455** | ~40x/seconde | Couleur de chaque entité (LEDS) |
+| Config | HTTP **6456** | À la demande | `wall-bands` du profil Hub actif |
+| Commandes | TCP | Rare | `START_SHOW`, `STOP_SHOW`, … |
 
 Détail complet des formats de message : voir `docs/contrat-interface-animation-routage.md`.
+
+### Sync mapping mur (Hub)
+
+Au Play, `InstallationLoader` interroge `GET /api/wall-bands` sur le Hub (HTTP :6456),
+puis fallback cache local / `Resources/Configs/wall-bands.json`.
+Voir [`Docs/hub-config-sync.md`](Docs/hub-config-sync.md). Menu éditeur : **LED > Sync Wall Bands from Hub**.
 
 ---
 
