@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Paloma_Scroll
   m_EditorClassIdentifier: Assembly-CSharp::PalomaRumbaTextClip
   bpm: 120
-  maxSpeed: 12
-  goldColor: {r: 0.9, g: 0.76, b: 0.16, a: 1}
-  redColor: {r: 0.85, g: 0, b: 0.07, a: 1}
+  maxSpeed: 23
+  goldColor: {r: 1, g: 0.8095238, b: 0, a: 1}
+  redColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!114 &-9000000000000000010
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -224,7 +224,7 @@ MonoBehaviour:
     m_Start: 3.3988020850811154
     m_ClipIn: 0
     m_Asset: {fileID: -9000000000000000011}
-    m_Duration: 2.6611979149188842
+    m_Duration: 14.441197914918884
     m_TimeScale: 1
     m_ParentTrack: {fileID: -8000000000000000011}
     m_EaseInDuration: 0
