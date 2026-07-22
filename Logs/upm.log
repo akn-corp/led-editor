@@ -1,0 +1,13 @@
+[2026-07-21T13:06:51.056Z][INFO] Command-line: /Applications/Unity/Hub/Editor/6000.5.4f1/Unity.app/Contents/Helpers/PackageManager/Server/UnityPackageManager server -s 10094 --ipc-path /tmp/Unity-Upm-10094.sock -l 2 --log-file '/Users/sayeh/dev/led project /led editor/Logs/upm.log'
+[2026-07-21T13:06:51.077Z][INFO] IPC server started (IPC path=/tmp/Unity-Upm-10094.sock).
+[2026-07-21T13:06:51.078Z][INFO] Hint: To connect to this UPM instance, launch Unity with the command-line parameter -upmIpcPath Upm-10094.
+[2026-07-21T13:07:46.753Z][INFO] project:list-packages <-- Request received
+params: {}
+[2026-07-21T13:07:46.863Z][INFO] project:list-packages --> 200 (110 ms)
+[2026-07-21T13:07:46.885Z][INFO] project:list-packages <-- Request received
+params: {}
+[2026-07-21T13:07:46.897Z][INFO] config:project:get-registries <-- Request received
+params: {}
+[2026-07-21T13:07:46.910Z][INFO] config:project:get-registries --> 200 (13 ms)
+[2026-07-21T13:07:46.934Z][INFO] project:list-packages --> 200 (49 ms)
+[2026-07-21T13:08:01.147Z][INFO] Shutting down UnityPackageManager: parent process [10094] is no longer running.
