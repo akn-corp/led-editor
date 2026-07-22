@@ -197,6 +197,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SceneBuilder
   entityManager: {fileID: 1818472465}
+  deviceManager: {fileID: 1928374651}
   installationLoader: {fileID: 511210557}
   wallCellSize: 0.05
   animationMode: 0
@@ -228,6 +229,7 @@ GameObject:
   m_Component:
   - component: {fileID: 628414036}
   - component: {fileID: 628414035}
+  - component: {fileID: 628414037}
   m_Layer: 0
   m_Name: Director
   m_TagString: Untagged
@@ -245,7 +247,7 @@ PlayableDirector:
   m_Enabled: 1
   serializedVersion: 3
   m_PlayableAsset: {fileID: 11400000, guid: ef092ae5fa76f4247ad12663b54722c8, type: 2}
-  m_InitialState: 1
+  m_InitialState: 0
   m_WrapMode: 2
   m_DirectorUpdateMode: 1
   m_InitialTime: 0
@@ -255,9 +257,13 @@ PlayableDirector:
   - key: {fileID: -8000000000000000001, guid: ef092ae5fa76f4247ad12663b54722c8, type: 2}
     value: {fileID: 0}
   - key: {fileID: -8000000000000000010, guid: ef092ae5fa76f4247ad12663b54722c8, type: 2}
-    value: {fileID: 1818472465}
+    value: {fileID: 0}
   - key: {fileID: -8000000000000000011, guid: ef092ae5fa76f4247ad12663b54722c8, type: 2}
-    value: {fileID: 1818472465}
+    value: {fileID: 0}
+  - key: {fileID: -8000000000000000020, guid: ef092ae5fa76f4247ad12663b54722c8, type: 2}
+    value: {fileID: 1928374651}
+  - key: {fileID: -8151084890158031626, guid: ef092ae5fa76f4247ad12663b54722c8, type: 2}
+    value: {fileID: 0}
   m_ExposedReferences:
     m_References: []
 --- !u!4 &628414036
@@ -275,6 +281,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &628414037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 628414034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15b208d6e2d049b493731eeab6f47be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TimelineEditPreviewDriver
+  sceneBuilder: {fileID: 522497787}
+  deviceManager: {fileID: 1928374651}
+  ensureBuiltInEditMode: 1
 --- !u!1 &762704458
 GameObject:
   m_ObjectHideFlags: 0
@@ -358,7 +379,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0.05, g: 0.05, b: 0.06, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -383,7 +404,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 3.5
+  orthographic size: 8.7
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -408,7 +429,7 @@ Transform:
   m_GameObject: {fileID: 840037306}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -8}
+  m_LocalPosition: {x: 0, y: -0.6999999, z: -8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -537,9 +558,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StateExporter
   entityManager: {fileID: 1818472465}
+  deviceManager: {fileID: 1928374651}
   targetIp: 127.0.0.1
   targetPort: 6455
   sendIntervalSeconds: 0.025
+  sendDevices: 1
   logEveryFrame: 0
 --- !u!4 &1097684621
 Transform:
@@ -983,6 +1006,66 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1928374650
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1928374652}
+  - component: {fileID: 1928374651}
+  - component: {fileID: 1928374653}
+  m_Layer: 0
+  m_Name: DeviceManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1928374651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1928374650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a4bac1dd450423088bd237741658522, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DeviceManager
+--- !u!4 &1928374652
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1928374650}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1928374653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1928374650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbf9d711366641f7be84f6fe93fa05e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DevicePreviewVisualizer
+  deviceManager: {fileID: 1928374651}
+  wallHalfExtent: 3.2
+  beamMaxLength: 1.8
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -990,6 +1073,7 @@ SceneRoots:
   - {fileID: 840037309}
   - {fileID: 1491680862}
   - {fileID: 1818472466}
+  - {fileID: 1928374652}
   - {fileID: 762704460}
   - {fileID: 511210558}
   - {fileID: 522497788}

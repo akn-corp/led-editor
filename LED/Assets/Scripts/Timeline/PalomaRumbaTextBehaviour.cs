@@ -99,6 +99,11 @@ public class PalomaRumbaTextBehaviour : PlayableBehaviour
 
     public void Apply(EntityManager entityManager, float clipTime, float clipDuration)
     {
+        Apply(entityManager, null, clipTime, clipDuration);
+    }
+
+    public void Apply(EntityManager entityManager, LedWallVisualizer visualizer, float clipTime, float clipDuration)
+    {
         if (entityManager == null || !WallMapping.IsInitialized) return;
 
         // Lazy-init de la bande si le type de police change
@@ -131,8 +136,17 @@ public class PalomaRumbaTextBehaviour : PlayableBehaviour
         int cols = WallMapping.Columns;
         int rows = WallMapping.VisibleRows;
         EnsureBuffer(cols, rows);
+
+        if (visualizer != null)
+            _visualizer = visualizer;
         if (_visualizer == null)
             _visualizer = Object.FindFirstObjectByType<LedWallVisualizer>();
+        if (_visualizer == null)
+        {
+            Debug.LogWarning("[PalomaRumba] LedWallVisualizer introuvable — mur pas encore construit.");
+            return;
+        }
+        _visualizer.SetSuppressSingleUpdates(true);
 
         int charHeight = (fontType == PalomaFontType.Bold_8x12) ? 12 : 5;
         int currentBandHeight = Mathf.Max(charHeight + 1, bandHeight);

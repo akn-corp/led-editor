@@ -1,4 +1,4 @@
-// Encodeur binaire LEDS (UDP :6455) — aligné sur led-routing-hub/docs/protocole-state.md
+// Encodeur binaire LEDS + DEVS (UDP :6455) — aligné sur led-routing-hub/docs/protocole-state.md
 // et led-studio-editor/electron/protocol.ts.
 
 using System;
@@ -12,8 +12,11 @@ public static class StateProtocol
     public const int LedHeaderSize = 13;
     public const int LedEntrySize = 3;
     public const int MaxLedEntriesPerChunk = 400;
+    public const int DevsHeaderSize = 8;
+    public const int DeviceBlockSize = 16;
 
     private static readonly byte[] LedMagic = Encoding.ASCII.GetBytes("LEDS");
+    private static readonly byte[] DevsMagic = Encoding.ASCII.GetBytes("DEVS");
 
     public struct Rgb
     {
@@ -133,6 +136,52 @@ public static class StateProtocol
         }
 
         return packets;
+    }
+
+    /// <summary>
+    /// Un paquet DEVS (pas de chunking) — 8 + N×16 octets. frameId indépendant de LEDS.
+    /// </summary>
+    public static byte[] EncodeDevsPacket(int frameId, DeviceManager deviceManager)
+    {
+        if (deviceManager == null)
+            return EncodeDevsPacket(frameId, Array.Empty<DeviceState>());
+
+        return EncodeDevsPacket(frameId, deviceManager.SnapshotAll());
+    }
+
+    public static byte[] EncodeDevsPacket(int frameId, DeviceState[] devices)
+    {
+        int count = devices != null ? Math.Min(devices.Length, 255) : 0;
+        var buf = new byte[DevsHeaderSize + count * DeviceBlockSize];
+
+        Buffer.BlockCopy(DevsMagic, 0, buf, 0, 4);
+        buf[4] = 1;
+        WriteUInt16LE(buf, 5, (ushort)(frameId & 0xffff));
+        buf[7] = (byte)(count & 0xff);
+
+        int offset = DevsHeaderSize;
+        for (int i = 0; i < count; i++)
+        {
+            var d = devices[i];
+            buf[offset] = d.deviceId;
+            buf[offset + 1] = d.pan;
+            buf[offset + 2] = d.panFine;
+            buf[offset + 3] = d.tilt;
+            buf[offset + 4] = d.tiltFine;
+            buf[offset + 5] = d.dimmer;
+            buf[offset + 6] = d.shutter;
+            buf[offset + 7] = d.colorWheel;
+            buf[offset + 8] = d.r;
+            buf[offset + 9] = d.g;
+            buf[offset + 10] = d.b;
+            buf[offset + 11] = d.w;
+            buf[offset + 12] = d.moveSpeed;
+            buf[offset + 13] = d.function;
+            WriteUInt16LE(buf, offset + 14, 0);
+            offset += DeviceBlockSize;
+        }
+
+        return buf;
     }
 
     private static void WriteUInt16LE(byte[] buf, int offset, ushort value)

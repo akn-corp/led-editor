@@ -1,5 +1,5 @@
-// Envoie le full state LEDS en UDP à 40 Hz vers led-routing-hub (port 6455).
-// Chaque frame contient tous les chunks LEDS (pas de delta).
+// Envoie le full state LEDS puis DEVS en UDP à 40 Hz vers led-routing-hub (port 6455).
+// Ordre : tous les chunks LEDS, puis 1 paquet DEVS. frameId séparés.
 
 using System.Collections.Generic;
 using System.Net;
@@ -9,12 +9,16 @@ using UnityEngine;
 public class StateExporter : MonoBehaviour
 {
     [SerializeField] private EntityManager entityManager;
+    [SerializeField] private DeviceManager deviceManager;
 
     [Header("Cible réseau (led-routing-hub)")]
     [SerializeField] private string targetIp = "127.0.0.1";
     [SerializeField] private int targetPort = StateProtocol.StatePort;
 
     [SerializeField] private float sendIntervalSeconds = 1f / 40f;
+
+    [Header("Devices (DEVS)")]
+    [SerializeField] private bool sendDevices = true;
 
     [Header("Debug")]
     [SerializeField] private bool logEveryFrame;
@@ -23,7 +27,9 @@ public class StateExporter : MonoBehaviour
     private IPEndPoint _endpoint;
     private float _timer;
     private ushort _frameId;
+    private ushort _devsFrameId;
     private bool _loggedFirstSend;
+    private bool _loggedFirstDevs;
 
     void OnEnable()
     {
@@ -34,6 +40,9 @@ public class StateExporter : MonoBehaviour
             return;
         }
 
+        if (sendDevices && deviceManager == null)
+            Debug.LogWarning("[StateExporter] DeviceManager manquant — DEVS désactivé jusqu'à assignation.");
+
         if (targetPort != StateProtocol.StatePort)
         {
             Debug.LogWarning($"[StateExporter] targetPort corrigé {targetPort} → {StateProtocol.StatePort}");
@@ -42,7 +51,7 @@ public class StateExporter : MonoBehaviour
 
         _client = new UdpClient();
         _endpoint = new IPEndPoint(IPAddress.Parse(targetIp), targetPort);
-        Debug.Log($"[StateExporter] Prêt — cible {targetIp}:{targetPort} @ {1f / sendIntervalSeconds:F0} Hz");
+        Debug.Log($"[StateExporter] Prêt — cible {targetIp}:{targetPort} @ {1f / sendIntervalSeconds:F0} Hz (devices={sendDevices})");
     }
 
     void OnDisable()
@@ -66,9 +75,7 @@ public class StateExporter : MonoBehaviour
         if (packets.Count == 0) return;
 
         foreach (byte[] packet in packets)
-        {
             _client.Send(packet, packet.Length, _endpoint);
-        }
 
         if (logEveryFrame || !_loggedFirstSend)
         {
@@ -77,6 +84,23 @@ public class StateExporter : MonoBehaviour
             Debug.Log(
                 $"[StateExporter] LEDS frameId={currentFrameId}, chunks={packets.Count}, " +
                 $"1er paquet={first.Length} octets, magic={System.Text.Encoding.ASCII.GetString(first, 0, 4)}");
+        }
+
+        if (!sendDevices || deviceManager == null) return;
+
+        byte[] devs = StateProtocol.EncodeDevsPacket(_devsFrameId, deviceManager);
+        int currentDevsFrameId = _devsFrameId;
+        _devsFrameId++;
+
+        _client.Send(devs, devs.Length, _endpoint);
+
+        if (logEveryFrame || !_loggedFirstDevs)
+        {
+            _loggedFirstDevs = true;
+            Debug.Log(
+                $"[StateExporter] DEVS frameId={currentDevsFrameId}, " +
+                $"paquet={devs.Length} octets, deviceCount={devs[7]}, " +
+                $"magic={System.Text.Encoding.ASCII.GetString(devs, 0, 4)}");
         }
     }
 }

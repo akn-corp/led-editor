@@ -3,8 +3,8 @@
 // Montage Timeline (recommandé) :
 //   animationMode = None
 //   → LedWallTextPainter est toujours créé sur LedWall
-//   → EntityTextTrackBinder relie auto EntityText / Fluid / Paloma / EntityColor
-//   → Entity Text = paroles ; FluidWall = vague ; PalomaRumba = bandeau or/rouge
+//   → EntityTextTrackBinder relie auto EntityText / Fluid / Paloma / EntityColor / Device
+//   → EntityText = paroles ; FluidWall = vague ; PalomaRumba = bandeau ; Device = lyres/RGBW
 
 using System.Collections;
 using UnityEngine;
@@ -14,6 +14,7 @@ using UnityEngine.Playables;
 public class SceneBuilder : MonoBehaviour
 {
     [SerializeField] private EntityManager entityManager;
+    [SerializeField] private DeviceManager deviceManager;
     [SerializeField] private InstallationLoader installationLoader;
     [SerializeField] private float wallCellSize = 0.05f;
 
@@ -25,7 +26,7 @@ public class SceneBuilder : MonoBehaviour
     }
 
     [Header("Animation mur")]
-    [Tooltip("None = Timeline pilote le mur (EntityText / FluidWall / Paloma / EntityColor). Fluid/Kinetic = démo auto hors Timeline.")]
+    [Tooltip("None = Timeline pilote le mur + devices (EntityText / FluidWall / Paloma / EntityColor / Device). Fluid/Kinetic = démo auto hors Timeline.")]
     [SerializeField] private WallAnimationMode animationMode = WallAnimationMode.None;
 
     [Header("Test de validation (à désactiver une fois vérifié)")]
@@ -37,6 +38,31 @@ public class SceneBuilder : MonoBehaviour
     private LedWallTextPainter _textPainter;
     private bool _built;
 
+    /// <summary>Construit mur/devices/bindings pour Preview Timeline Edit Mode (= même rendu que Play).</summary>
+    public void EnsureBuiltForTimelinePreview()
+    {
+        // Après domain reload / destruction DontSave : forcer rebuild
+        if (_built && (_wallVisualizer == null || _textPainter == null))
+            _built = false;
+
+        if (_built) return;
+        if (entityManager == null || installationLoader == null) return;
+
+        if (deviceManager == null)
+            deviceManager = FindFirstObjectByType<DeviceManager>();
+        deviceManager?.EnsureDefaults();
+
+        var config = installationLoader.LoadWallBandsConfig();
+        BuildWithConfig(config);
+    }
+
+    void OnEnable()
+    {
+        // Edit Mode : préparer dès l’ouverture de scène pour Timeline (espace)
+        if (!Application.isPlaying && !_built)
+            EnsureBuiltForTimelinePreview();
+    }
+
     void Start()
     {
         if (_built) return;
@@ -47,6 +73,10 @@ public class SceneBuilder : MonoBehaviour
             return;
         }
 
+        if (deviceManager == null)
+            deviceManager = FindFirstObjectByType<DeviceManager>();
+        deviceManager?.EnsureDefaults();
+
         if (Application.isPlaying)
             StartCoroutine(BuildRoutine());
         else
@@ -55,9 +85,27 @@ public class SceneBuilder : MonoBehaviour
 
     IEnumerator BuildRoutine()
     {
+        var director = FindFirstObjectByType<PlayableDirector>();
+        double resumeTime = 0;
+        bool shouldPlay = false;
+        if (director != null)
+        {
+            resumeTime = director.time;
+            shouldPlay = director.state == PlayState.Playing || director.initialTime >= 0;
+            // Empêche la Timeline de tourner avant que le mur soit prêt
+            director.Stop();
+        }
+
         WallBandsConfig config = null;
         yield return installationLoader.LoadWallBandsConfigRoutine(cfg => config = cfg);
         BuildWithConfig(config);
+
+        if (director != null && Application.isPlaying)
+        {
+            director.time = resumeTime;
+            director.Evaluate();
+            director.Play();
+        }
     }
 
     void BuildWithConfig(WallBandsConfig config)
@@ -99,16 +147,27 @@ public class SceneBuilder : MonoBehaviour
             }
             case WallAnimationMode.None:
             default:
-                // Fluid/Paloma Timeline poussent via ApplyDisplayPixels ; EntityColor via OnColorChanged.
+                // Timeline Fluid/Paloma/EntityText/WallMedia écrivent via ApplyDisplayPixels / painter.
+                _wallVisualizer.SetSuppressSingleUpdates(true);
                 break;
         }
 
         var director = FindFirstObjectByType<PlayableDirector>();
         if (director != null)
-            EntityTextTrackBinder.BindAll(director, _textPainter, entityManager);
+            EntityTextTrackBinder.BindAll(director, _textPainter, entityManager, deviceManager);
 
-        if (Application.isPlaying)
-            FitCameraToWall(config.columns);
+        // Preview 3D sur DeviceManager (GO persisté) — PAS sur LedWall DontSaveInEditor,
+        // sinon FindFirstObjectByType / Update Edit Mode ne trouvent/rafraîchissent rien.
+        if (deviceManager != null)
+        {
+            float wallWidth = config.columns * wallCellSize;
+            var preview = deviceManager.GetComponent<DevicePreviewVisualizer>();
+            if (preview == null)
+                preview = deviceManager.gameObject.AddComponent<DevicePreviewVisualizer>();
+            preview.Initialize(deviceManager, wallWidth);
+        }
+
+        FitCameraToWall(config.columns);
 
         _built = true;
 
@@ -118,7 +177,7 @@ public class SceneBuilder : MonoBehaviour
         Debug.Log(
             $"[SceneBuilder] Mur Glassworks chargé — anim={animationMode}, source={source}" +
             (string.IsNullOrEmpty(config.profile) ? "" : $", profil={config.profile}") +
-            ". Timeline : EntityText + FluidWall + PalomaRumba auto-bindés.");
+                ". Timeline : mur (texte/fluid/paloma) → LedWall ; devices → DeviceManager. Preview ON.");
 
         if (runQuickValidationTest && Application.isPlaying && animationMode == WallAnimationMode.None)
             Invoke(nameof(TriggerValidationColor), testDelaySeconds);
@@ -131,19 +190,39 @@ public class SceneBuilder : MonoBehaviour
 
         float worldWidth = columns * wallCellSize;
         float worldHeight = WallMapping.VisibleRows * wallCellSize;
-        float margin = 0.15f;
         Vector3 wallCenter = transform.position;
 
+        // Cadrer mur + rangée devices (sinon lyres hors cadre avec ortho ~3.5)
+        DevicePreviewVisualizer preview = null;
+        if (deviceManager != null)
+            preview = deviceManager.GetComponent<DevicePreviewVisualizer>();
+        if (preview == null)
+            preview = FindFirstObjectByType<DevicePreviewVisualizer>();
+
+        Vector3 viewCenter = wallCenter;
+        float halfHeight = worldHeight * 0.5f + 0.6f;
+        float halfWidth = worldWidth * 0.5f + 0.6f;
+
+        if (preview != null)
+        {
+            viewCenter = wallCenter + preview.RecommendedViewCenter;
+            halfHeight = Mathf.Max(halfHeight, preview.RecommendedHalfHeight);
+            halfWidth = Mathf.Max(halfWidth, worldWidth * 0.5f + 1.2f);
+        }
+        else
+        {
+            // Fallback : descendre le cadre pour la zone sous le mur
+            viewCenter.y -= worldHeight * 0.22f;
+            halfHeight += 1.8f;
+        }
+
         cam.orthographic = true;
-        cam.transform.position = new Vector3(wallCenter.x, wallCenter.y, -8f);
+        cam.transform.position = new Vector3(viewCenter.x, viewCenter.y, -8f);
         cam.transform.rotation = Quaternion.identity;
         cam.backgroundColor = new Color(0.05f, 0.05f, 0.06f);
+        cam.orthographicSize = Mathf.Max(halfHeight, halfWidth / Mathf.Max(0.1f, cam.aspect));
 
-        float halfHeight = worldHeight * 0.5f + margin;
-        float halfWidth = worldWidth * 0.5f + margin;
-        cam.orthographicSize = Mathf.Max(halfHeight, halfWidth / cam.aspect);
-
-        Debug.Log($"[SceneBuilder] Caméra ajustée — orthoSize={cam.orthographicSize:F2}");
+        Debug.Log($"[SceneBuilder] Caméra ajustée — orthoSize={cam.orthographicSize:F2}, centerY={viewCenter.y:F2}");
     }
 
     private void TriggerValidationColor()

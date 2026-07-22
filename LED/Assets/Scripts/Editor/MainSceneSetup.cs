@@ -30,6 +30,7 @@ public static class MainSceneSetup
         var installation = GameObject.Find("Installation") ?? new GameObject("Installation");
 
         var entityManager = GetOrAddComponent<EntityManager>(installation, "EntityManager");
+        var deviceManager = GetOrAddComponent<DeviceManager>(installation, "DeviceManager");
         var installationLoader = GetOrAddComponent<InstallationLoader>(installation, "InstallationLoader");
         var sceneBuilder = GetOrAddComponent<SceneBuilder>(installation, "SceneBuilder");
         var stateExporter = GetOrAddComponent<StateExporter>(installation, "StateExporter");
@@ -37,6 +38,7 @@ public static class MainSceneSetup
         var builder = sceneBuilder.GetComponent<SceneBuilder>();
         var soBuilder = new SerializedObject(builder);
         soBuilder.FindProperty("entityManager").objectReferenceValue = entityManager;
+        soBuilder.FindProperty("deviceManager").objectReferenceValue = deviceManager;
         soBuilder.FindProperty("installationLoader").objectReferenceValue = installationLoader;
         soBuilder.FindProperty("testEntityId").intValue = 228;
         soBuilder.FindProperty("wallCellSize").floatValue = 0.05f;
@@ -44,6 +46,8 @@ public static class MainSceneSetup
 
         var soExporter = new SerializedObject(stateExporter);
         soExporter.FindProperty("entityManager").objectReferenceValue = entityManager;
+        soExporter.FindProperty("deviceManager").objectReferenceValue = deviceManager;
+        soExporter.FindProperty("sendDevices").boolValue = true;
         soExporter.FindProperty("targetPort").intValue = StateProtocol.StatePort;
         soExporter.ApplyModifiedPropertiesWithoutUndo();
     }
