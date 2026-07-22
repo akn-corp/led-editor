@@ -1,5 +1,5 @@
-// Relie automatiquement toutes les EntityTextTrack du PlayableDirector
-// au LedWallTextPainter créé au runtime (LedWall n’existe pas en Edit Mode).
+// Relie automatiquement les pistes Timeline créées au runtime
+// (LedWall / EntityManager n’existent pas toujours en Edit Mode).
 
 using UnityEngine;
 using UnityEngine.Playables;
@@ -9,28 +9,42 @@ public static class EntityTextTrackBinder
 {
     public static void BindAll(PlayableDirector director, LedWallTextPainter painter)
     {
-        if (director == null || painter == null) return;
+        BindAll(director, painter, null);
+    }
+
+    public static void BindAll(PlayableDirector director, LedWallTextPainter painter, EntityManager entityManager)
+    {
+        if (director == null) return;
 
         var timeline = director.playableAsset as TimelineAsset;
         if (timeline == null) return;
 
-        int bound = 0;
+        int textBound = 0;
+        int entityBound = 0;
+
         foreach (var track in timeline.GetOutputTracks())
         {
-            if (track is not EntityTextTrack) continue;
-
-            director.SetGenericBinding(track, painter);
-            bound++;
-            Debug.Log($"[EntityTextTrackBinder] Binding « {track.name} » → {painter.gameObject.name}");
+            if (track is EntityTextTrack && painter != null)
+            {
+                director.SetGenericBinding(track, painter);
+                textBound++;
+                Debug.Log($"[TimelineBinder] EntityText « {track.name} » → {painter.gameObject.name}");
+            }
+            else if (entityManager != null &&
+                     (track is FluidWallTrack || track is PalomaRumbaTrack || track is EntityColorTrack))
+            {
+                director.SetGenericBinding(track, entityManager);
+                entityBound++;
+                Debug.Log($"[TimelineBinder] {track.GetType().Name} « {track.name} » → EntityManager");
+            }
         }
 
-        if (bound == 0)
+        if (textBound == 0 && entityBound == 0)
         {
-            Debug.LogWarning("[EntityTextTrackBinder] Aucune EntityText Track dans la Timeline.");
+            Debug.LogWarning("[TimelineBinder] Aucune piste EntityText / Fluid / Paloma / EntityColor à binder.");
             return;
         }
 
-        // Le graphe a souvent démarré sans binding : reconstruire
         double t = director.time;
         bool wasPlaying = director.state == PlayState.Playing;
         director.RebuildGraph();
@@ -39,6 +53,6 @@ public static class EntityTextTrackBinder
         if (wasPlaying || director.state != PlayState.Playing)
             director.Play();
 
-        Debug.Log($"[EntityTextTrackBinder] {bound} piste(s) Entity Text reliée(s), director reconstruit @ t={t:F2}s");
+        Debug.Log($"[TimelineBinder] text={textBound}, entity={entityBound}, director reconstruit @ t={t:F2}s");
     }
 }

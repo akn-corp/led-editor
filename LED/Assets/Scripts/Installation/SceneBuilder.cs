@@ -3,8 +3,8 @@
 // Montage Timeline (recommandé) :
 //   animationMode = None
 //   → LedWallTextPainter est toujours créé sur LedWall
-//   → EntityTextTrackBinder relie auto les pistes EntityText au painter
-//   → Add Entity Text Clip (texte, fades, OnStart/OnEnd dans l'Inspector)
+//   → EntityTextTrackBinder relie auto EntityText / Fluid / Paloma / EntityColor
+//   → Entity Text = paroles ; FluidWall = vague ; PalomaRumba = bandeau or/rouge
 
 using System.Collections;
 using UnityEngine;
@@ -25,7 +25,7 @@ public class SceneBuilder : MonoBehaviour
     }
 
     [Header("Animation mur")]
-    [Tooltip("None = Timeline pilote le mur (EntityColor / EntityText). Kinetic = démo auto hors Timeline.")]
+    [Tooltip("None = Timeline pilote le mur (EntityText / FluidWall / Paloma / EntityColor). Fluid/Kinetic = démo auto hors Timeline.")]
     [SerializeField] private WallAnimationMode animationMode = WallAnimationMode.None;
 
     [Header("Test de validation (à désactiver une fois vérifié)")]
@@ -99,12 +99,13 @@ public class SceneBuilder : MonoBehaviour
             }
             case WallAnimationMode.None:
             default:
+                // Fluid/Paloma Timeline poussent via ApplyDisplayPixels ; EntityColor via OnColorChanged.
                 break;
         }
 
         var director = FindFirstObjectByType<PlayableDirector>();
         if (director != null)
-            EntityTextTrackBinder.BindAll(director, _textPainter);
+            EntityTextTrackBinder.BindAll(director, _textPainter, entityManager);
 
         if (Application.isPlaying)
             FitCameraToWall(config.columns);
@@ -117,7 +118,7 @@ public class SceneBuilder : MonoBehaviour
         Debug.Log(
             $"[SceneBuilder] Mur Glassworks chargé — anim={animationMode}, source={source}" +
             (string.IsNullOrEmpty(config.profile) ? "" : $", profil={config.profile}") +
-            ". EntityText : binder LedWall (LedWallTextPainter) sur une EntityText Track.");
+            ". Timeline : EntityText + FluidWall + PalomaRumba auto-bindés.");
 
         if (runQuickValidationTest && Application.isPlaying && animationMode == WallAnimationMode.None)
             Invoke(nameof(TriggerValidationColor), testDelaySeconds);

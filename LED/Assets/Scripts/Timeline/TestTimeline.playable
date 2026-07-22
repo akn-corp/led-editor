@@ -1,6 +1,37 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-9000000000000000001
+--- !u!114 &-9000000000000000011
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b70d9fbadf229247a743f1b2d0b4a3a, type: 3}
+  m_Name: Paloma_Scroll
+  m_EditorClassIdentifier: Assembly-CSharp::PalomaRumbaTextClip
+  bpm: 120
+  maxSpeed: 12
+  goldColor: {r: 0.9, g: 0.76, b: 0.16, a: 1}
+  redColor: {r: 0.85, g: 0, b: 0.07, a: 1}
+--- !u!114 &-9000000000000000010
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5feaeca8d762834389ade3661012f03, type: 3}
+  m_Name: Fluid_Wave
+  m_EditorClassIdentifier: Assembly-CSharp::FluidWallClip
+  speed: 1.2
+  waveScale: 6
+  glowIntensity: 1.8
+--- !u!114 &-9000000000000000006
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10,15 +41,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4db28910b03fe4e06b00d98193749e8b, type: 3}
-  m_Name: Text_Cause
+  m_Name: Text_AllDayLong
   m_EditorClassIdentifier: Assembly-CSharp::EntityTextClip
-  text: Cause
-  color: {r: 1, g: 1, b: 1, a: 1}
+  text: all day long
+  color: {r: 0.35, g: 0.95, b: 0.2, a: 1}
   backgroundColor: {r: 0, g: 0, b: 0, a: 1}
   position: {x: 0.5, y: 0.5}
-  size: 0.22
+  size: 0.16
   fadeIn: 0.05
-  fadeOut: 0.05
+  fadeOut: 0.2
   easeIn: 5
   easeOut: 4
   fitToWall: 1
@@ -28,7 +59,7 @@ MonoBehaviour:
   onEnd:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &-9000000000000000002
+--- !u!114 &-9000000000000000005
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -38,13 +69,41 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4db28910b03fe4e06b00d98193749e8b, type: 3}
-  m_Name: Text_IDont
+  m_Name: Text_Numbers
   m_EditorClassIdentifier: Assembly-CSharp::EntityTextClip
-  text: I don't
+  text: numbers
+  color: {r: 0.35, g: 0.95, b: 0.2, a: 1}
+  backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+  position: {x: 0.5, y: 0.5}
+  size: 0.24
+  fadeIn: 0.05
+  fadeOut: 0.08
+  easeIn: 6
+  easeOut: 4
+  fitToWall: 1
+  onStart:
+    m_PersistentCalls:
+      m_Calls: []
+  onEnd:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &-9000000000000000004
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4db28910b03fe4e06b00d98193749e8b, type: 3}
+  m_Name: Text_TalkAbout
+  m_EditorClassIdentifier: Assembly-CSharp::EntityTextClip
+  text: talk about
   color: {r: 1, g: 1, b: 1, a: 1}
   backgroundColor: {r: 0, g: 0, b: 0, a: 1}
   position: {x: 0.5, y: 0.5}
-  size: 0.18
+  size: 0.16
   fadeIn: 0.05
   fadeOut: 0.05
   easeIn: 5
@@ -84,7 +143,7 @@ MonoBehaviour:
   onEnd:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &-9000000000000000004
+--- !u!114 &-9000000000000000002
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -94,13 +153,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4db28910b03fe4e06b00d98193749e8b, type: 3}
-  m_Name: Text_TalkAbout
+  m_Name: Text_IDont
   m_EditorClassIdentifier: Assembly-CSharp::EntityTextClip
-  text: talk about
+  text: I don't
   color: {r: 1, g: 1, b: 1, a: 1}
   backgroundColor: {r: 0, g: 0, b: 0, a: 1}
   position: {x: 0.5, y: 0.5}
-  size: 0.16
+  size: 0.18
   fadeIn: 0.05
   fadeOut: 0.05
   easeIn: 5
@@ -112,7 +171,7 @@ MonoBehaviour:
   onEnd:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &-9000000000000000005
+--- !u!114 &-9000000000000000001
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -122,43 +181,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4db28910b03fe4e06b00d98193749e8b, type: 3}
-  m_Name: Text_Numbers
+  m_Name: Text_Cause
   m_EditorClassIdentifier: Assembly-CSharp::EntityTextClip
-  text: numbers
-  color: {r: 0.35, g: 0.95, b: 0.2, a: 1}
+  text: Cause
+  color: {r: 1, g: 1, b: 1, a: 1}
   backgroundColor: {r: 0, g: 0, b: 0, a: 1}
   position: {x: 0.5, y: 0.5}
-  size: 0.24
+  size: 0.22
   fadeIn: 0.05
-  fadeOut: 0.08
-  easeIn: 6
-  easeOut: 4
-  fitToWall: 1
-  onStart:
-    m_PersistentCalls:
-      m_Calls: []
-  onEnd:
-    m_PersistentCalls:
-      m_Calls: []
---- !u!114 &-9000000000000000006
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4db28910b03fe4e06b00d98193749e8b, type: 3}
-  m_Name: Text_AllDayLong
-  m_EditorClassIdentifier: Assembly-CSharp::EntityTextClip
-  text: all day long
-  color: {r: 0.35, g: 0.95, b: 0.2, a: 1}
-  backgroundColor: {r: 0, g: 0, b: 0, a: 1}
-  position: {x: 0.5, y: 0.5}
-  size: 0.16
-  fadeIn: 0.05
-  fadeOut: 0.2
+  fadeOut: 0.05
   easeIn: 5
   easeOut: 4
   fitToWall: 1
@@ -168,6 +199,118 @@ MonoBehaviour:
   onEnd:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &-8000000000000000011
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be570e78c9d37ec4dbf49ea783f8722c, type: 3}
+  m_Name: Paloma Rumba Track
+  m_EditorClassIdentifier: Assembly-CSharp::PalomaRumbaTrack
+  m_Version: 3
+  m_AnimClip: {fileID: 0}
+  m_Locked: 0
+  m_Muted: 0
+  m_CustomPlayableFullTypename: 
+  m_Curves: {fileID: 0}
+  m_Parent: {fileID: 11400000}
+  m_Children: []
+  m_Clips:
+  - m_Version: 1
+    m_Start: 3.3988020850811154
+    m_ClipIn: 0
+    m_Asset: {fileID: -9000000000000000011}
+    m_Duration: 2.6611979149188842
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -8000000000000000011}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: PALOMA RUMBA
+  m_Markers:
+    m_Objects: []
+--- !u!114 &-8000000000000000010
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01143eac8f2941c197dbb1c95b17b968, type: 3}
+  m_Name: Fluid Wall Track
+  m_EditorClassIdentifier: Assembly-CSharp::FluidWallTrack
+  m_Version: 3
+  m_AnimClip: {fileID: 0}
+  m_Locked: 0
+  m_Muted: 0
+  m_CustomPlayableFullTypename: 
+  m_Curves: {fileID: 0}
+  m_Parent: {fileID: 11400000}
+  m_Children: []
+  m_Clips:
+  - m_Version: 1
+    m_Start: 15.12
+    m_ClipIn: 0
+    m_Asset: {fileID: -9000000000000000010}
+    m_Duration: 2.7199999999999998
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -8000000000000000010}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: Fluid wave
+  m_Markers:
+    m_Objects: []
 --- !u!114 &-8000000000000000001
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -358,7 +501,7 @@ MonoBehaviour:
     m_Start: 2.2
     m_ClipIn: 0
     m_Asset: {fileID: -9000000000000000006}
-    m_Duration: 1.0
+    m_Duration: 1
     m_TimeScale: 1
     m_ParentTrack: {fileID: -8000000000000000001}
     m_EaseInDuration: 0
@@ -482,6 +625,8 @@ MonoBehaviour:
   m_Tracks:
   - {fileID: -7000000000000000001}
   - {fileID: -8000000000000000001}
+  - {fileID: -8000000000000000010}
+  - {fileID: -8000000000000000011}
   m_FixedDuration: 106.38
   m_EditorSettings:
     m_Framerate: 50

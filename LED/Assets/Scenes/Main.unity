@@ -149,6 +149,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InstallationLoader
   wallBandsResourcePath: Configs/wall-bands
+  configBaseUrl: http://127.0.0.1:6456
+  syncFromHubOnStart: 1
+  hubTimeoutSeconds: 2
 --- !u!4 &511210558
 Transform:
   m_ObjectHideFlags: 0
@@ -249,6 +252,12 @@ PlayableDirector:
   m_SceneBindings:
   - key: {fileID: -7000000000000000001, guid: ef092ae5fa76f4247ad12663b54722c8, type: 2}
     value: {fileID: 1513256887}
+  - key: {fileID: -8000000000000000001, guid: ef092ae5fa76f4247ad12663b54722c8, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: -8000000000000000010, guid: ef092ae5fa76f4247ad12663b54722c8, type: 2}
+    value: {fileID: 1818472465}
+  - key: {fileID: -8000000000000000011, guid: ef092ae5fa76f4247ad12663b54722c8, type: 2}
+    value: {fileID: 1818472465}
   m_ExposedReferences:
     m_References: []
 --- !u!4 &628414036
