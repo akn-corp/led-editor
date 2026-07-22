@@ -1,8 +1,17 @@
-// Défilement « PALOMA RUMBA » en fonte 3×5, rangées or / rouge alternées.
+// Assets/Scripts/Timeline/PalomaRumbaTextBehaviour.cs
+//
+// Animation de défilement de texte "PALOMA RUMBA" en couleurs Or / Rouge (Option A)
+// Supporte le choix entre micro-pixel (3x5) et grand format gras lisible (8x12).
 
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
+
+public enum PalomaFontType
+{
+    Micro_3x5,
+    Bold_8x12
+}
 
 public class PalomaRumbaTextBehaviour : PlayableBehaviour
 {
@@ -10,8 +19,11 @@ public class PalomaRumbaTextBehaviour : PlayableBehaviour
     public float maxSpeed = 12f;
     public Color32 goldColor = new Color32(230, 194, 41, 255);
     public Color32 redColor = new Color32(217, 0, 18, 255);
+    public PalomaFontType fontType = PalomaFontType.Bold_8x12;
+    public int bandHeight = 16;
 
-    private static readonly Dictionary<char, string[]> Font = new Dictionary<char, string[]>
+    // Font 3x5 d'origine
+    private static readonly Dictionary<char, string[]> Font3x5 = new Dictionary<char, string[]>
     {
         { 'P', new[] { "###", "#.#", "###", "#..", "#.." } },
         { 'A', new[] { ".#.", "#.#", "###", "#.#", "#.#" } },
@@ -21,44 +33,80 @@ public class PalomaRumbaTextBehaviour : PlayableBehaviour
         { 'R', new[] { "##.", "#.#", "##.", "#.#", "#.#" } },
         { 'U', new[] { "#.#", "#.#", "#.#", "#.#", "###" } },
         { 'B', new[] { "##.", "#.#", "##.", "#.#", "##." } },
-        { ' ', new[] { "...", "...", "...", "...", "..." } },
+        { ' ', new[] { "...", "...", "...", "...", "..." } }
     };
 
-    private static bool[][] _textBand;
-    private static int _bandWidth;
+    // Font 8x12 Gras / Haute Visibilité
+    private static readonly Dictionary<char, byte[]> Font8x12 = new Dictionary<char, byte[]>
+    {
+        { 'P', new byte[] { 0xFC, 0xFE, 0xC3, 0xC3, 0xFE, 0xFC, 0xC0, 0xC0, 0xC0, 0xC0, 0xC0, 0xC0 } },
+        { 'A', new byte[] { 0x3C, 0x7E, 0xC3, 0xC3, 0xFF, 0xFF, 0xC3, 0xC3, 0xC3, 0xC3, 0xC3, 0xC3 } },
+        { 'L', new byte[] { 0xC0, 0xC0, 0xC0, 0xC0, 0xC0, 0xC0, 0xC0, 0xC0, 0xC0, 0xC0, 0xFF, 0xFF } },
+        { 'O', new byte[] { 0x3C, 0x7E, 0xC3, 0xC3, 0xC3, 0xC3, 0xC3, 0xC3, 0xC3, 0xC3, 0x7E, 0x3C } },
+        { 'M', new byte[] { 0xC3, 0xE7, 0xFF, 0xFF, 0xDB, 0xC3, 0xC3, 0xC3, 0xC3, 0xC3, 0xC3, 0xC3 } },
+        { 'R', new byte[] { 0xFC, 0xFE, 0xC3, 0xC3, 0xFE, 0xFC, 0xCC, 0xCC, 0xC6, 0xC6, 0xC3, 0xC3 } },
+        { 'U', new byte[] { 0xC3, 0xC3, 0xC3, 0xC3, 0xC3, 0xC3, 0xC3, 0xC3, 0xC3, 0xC3, 0x7E, 0x3C } },
+        { 'B', new byte[] { 0xFC, 0xFE, 0xC3, 0xC3, 0xFE, 0xFE, 0xC3, 0xC3, 0xC3, 0xC3, 0xFE, 0xFC } },
+        { ' ', new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 } }
+    };
+
+    private bool[][] _textBand;
+    private int _bandWidth;
+    private PalomaFontType _cachedFontType = (PalomaFontType)(-1);
     private Color[] _displayPixels;
     private LedWallVisualizer _visualizer;
 
-    static PalomaRumbaTextBehaviour()
+    private void InitTextBand(string msg)
     {
-        InitTextBand("PALOMA RUMBA ");
-    }
-
-    private static void InitTextBand(string msg)
-    {
-        var rows = new List<bool>[5];
-        for (int i = 0; i < 5; i++) rows[i] = new List<bool>();
+        int charHeight = (fontType == PalomaFontType.Bold_8x12) ? 12 : 5;
+        var rows = new List<bool>[charHeight];
+        for (int i = 0; i < charHeight; i++) rows[i] = new List<bool>();
 
         foreach (char ch in msg)
         {
-            var glyph = Font.ContainsKey(ch) ? Font[ch] : Font[' '];
-            for (int r = 0; r < 5; r++)
+            if (fontType == PalomaFontType.Bold_8x12)
             {
-                foreach (char c in glyph[r])
-                    rows[r].Add(c == '#');
-                rows[r].Add(false);
+                byte[] glyph = Font8x12.ContainsKey(ch) ? Font8x12[ch] : Font8x12[' '];
+                for (int r = 0; r < 12; r++)
+                {
+                    byte val = glyph[r];
+                    for (int col = 7; col >= 0; col--)
+                    {
+                        rows[r].Add((val & (1 << col)) != 0);
+                    }
+                    rows[r].Add(false); // Espace inter-caractères
+                }
+            }
+            else
+            {
+                string[] glyph = Font3x5.ContainsKey(ch) ? Font3x5[ch] : Font3x5[' '];
+                for (int r = 0; r < 5; r++)
+                {
+                    foreach (char c in glyph[r])
+                        rows[r].Add(c == '#');
+                    rows[r].Add(false); // Espace inter-caractères
+                }
             }
         }
 
         _bandWidth = rows[0].Count;
-        _textBand = new bool[5][];
-        for (int r = 0; r < 5; r++)
+        _textBand = new bool[charHeight][];
+        for (int r = 0; r < charHeight; r++)
+        {
             _textBand[r] = rows[r].ToArray();
+        }
     }
 
     public void Apply(EntityManager entityManager, float clipTime, float clipDuration)
     {
         if (entityManager == null || !WallMapping.IsInitialized) return;
+
+        // Lazy-init de la bande si le type de police change
+        if (_cachedFontType != fontType || _textBand == null)
+        {
+            _cachedFontType = fontType;
+            InitTextBand("PALOMA RUMBA ");
+        }
 
         float duration = clipDuration > 0f ? clipDuration : 14f;
         float fade = Mathf.Min(1.5f, duration * 0.15f);
@@ -86,10 +134,13 @@ public class PalomaRumbaTextBehaviour : PlayableBehaviour
         if (_visualizer == null)
             _visualizer = Object.FindFirstObjectByType<LedWallVisualizer>();
 
+        int charHeight = (fontType == PalomaFontType.Bold_8x12) ? 12 : 5;
+        int currentBandHeight = Mathf.Max(charHeight + 1, bandHeight);
+
         for (int y = 0; y < rows; y++)
         {
-            int bandIndex = y / 6;
-            int ry = y % 6;
+            int bandIndex = y / currentBandHeight;
+            int ry = y % currentBandHeight;
             Color32 primaryColor = (bandIndex % 2 == 0) ? goldColor : redColor;
             int texRow = rows - 1 - y;
 
@@ -107,10 +158,9 @@ public class PalomaRumbaTextBehaviour : PlayableBehaviour
                 else
                 {
                     bool on = false;
-                    if (ry < 5 && _bandWidth > 0 && _textBand != null)
+                    if (ry < charHeight && _bandWidth > 0 && _textBand != null)
                     {
                         int dir = (bandIndex % 2 == 0) ? 1 : -1;
-                        // Modulo positif robuste (évite bx == _bandWidth / négatif avec float %)
                         int bx = Mathf.FloorToInt(x + accumulatedScroll * dir) % _bandWidth;
                         if (bx < 0) bx += _bandWidth;
                         if ((uint)bx < (uint)_textBand[ry].Length)
