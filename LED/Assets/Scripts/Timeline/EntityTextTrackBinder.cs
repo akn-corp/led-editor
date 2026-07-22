@@ -48,10 +48,13 @@ public static class EntityTextTrackBinder
         {
             foreach (var track in timeline.GetOutputTracks())
             {
-                if (track is FluidWallTrack || track is PalomaRumbaTrack || track is WallMediaTrack)
+                if (track is FluidWallTrack || track is PalomaRumbaTrack || track is WallMediaTrack
+                    || track is RippleWaveTrack || track is ConvergenceGridTrack)
                 {
                     wall = director.GetGenericBinding(track) as LedWallVisualizer;
                     if (wall != null) break;
+                    if (director.GetGenericBinding(track) is EntityManager)
+                        break;
                 }
             }
         }
@@ -87,6 +90,11 @@ public static class EntityTextTrackBinder
             else if ((track is FluidWallTrack || track is PalomaRumbaTrack || track is WallMediaTrack) && wall != null)
             {
                 director.SetGenericBinding(track, wall);
+                wallBound++;
+            }
+            else if ((track is RippleWaveTrack || track is ConvergenceGridTrack) && entityManager != null)
+            {
+                director.SetGenericBinding(track, entityManager);
                 wallBound++;
             }
             else if (track is DeviceTrack && deviceManager != null)

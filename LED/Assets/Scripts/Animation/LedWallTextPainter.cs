@@ -20,7 +20,12 @@ public class LedWallTextPainter : MonoBehaviour
     private Texture2D _fontReadable;
     private bool _ready;
 
-    public bool IsReady => _ready;
+    // Prêt seulement si l'initialisation a réellement produit les buffers. Évite une
+    // NullReferenceException si le composant est reconstruit (rebuild Timeline / reload de
+    // domaine éditeur) alors que _ready valait encore true.
+    public bool IsReady =>
+        _ready && _entityGrid != null && _displayPixels != null
+        && _entityManager != null && _visualizer != null;
 
     public void Initialize(EntityManager entityManager, LedWallVisualizer visualizer, int columns)
     {
@@ -115,7 +120,8 @@ public class LedWallTextPainter : MonoBehaviour
 
     private bool EnsureBuffers()
     {
-        if (_displayPixels == null || _entityManager == null || _visualizer == null)
+        if (_displayPixels == null || _entityGrid == null
+            || _entityManager == null || _visualizer == null)
             return false;
         if (_fontReadable == null && _font != null)
             RefreshFontReadable();
@@ -271,6 +277,9 @@ public class LedWallTextPainter : MonoBehaviour
 
     private void PushToWall()
     {
+        if (_entityGrid == null || _displayPixels == null
+            || _entityManager == null || _visualizer == null) return;
+
         for (int row = 0; row < _rows; row++)
         {
             int texRow = _rows - 1 - row;
