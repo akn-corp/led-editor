@@ -436,8 +436,8 @@ MonoBehaviour:
   bpm: 120
   waveAmplitude: 11
   waveSpeed: 3
-  drawerColumns: 5
-  drawerRows: 4
+  drawerColumns: 4
+  drawerRows: 3
   drawerGap: 2
   fillMode: 0
   drawerDim: {r: 0.1, g: 0.1, b: 0.11, a: 1}

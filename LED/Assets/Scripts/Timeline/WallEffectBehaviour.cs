@@ -90,6 +90,7 @@ public class WallEffectBehaviour : PlayableBehaviour
     public float scannerDuration = 1.2f;
     public float flagSweepDuration = 2.6f;
     public bool silhouetteLetters = true;
+    private FireworkField _firework;
     public bool useParticles = false;
     public float particleChaos = 1.0f;
     public float particleConverge = 0.7f;
@@ -294,12 +295,35 @@ public class WallEffectBehaviour : PlayableBehaviour
 
     private Color SequenceA3Raw(int column, int y, int columns, int rows, float localTime)
     {
-        // 1) Les casiers (identiques a la version validee).
+        // 1) Les casiers (identiques a la version validee, repere bas = 0).
         if (localTime < phaseLockersEnd)
             return LockerWall(column, y, columns, rows, localTime);
 
-        // 2) Le drapeau armenien balaie de gauche a droite et ecrit HETIC.
-        return FlagWriteReveal(column, y, columns, rows, localTime - phaseLockersEnd);
+        // 2 & 3) Feu d'artifice + rassemblement HETIC.
+        // On repasse en orientation NATIVE (ligne 0 en haut) pour que les
+        // lettres soient a l'endroit. Le "row" natif = rows - 1 - y.
+        int nativeRow = rows - 1 - y;
+        return FireworkPhase(column, nativeRow, columns, rows, localTime - phaseLockersEnd);
+    }
+
+    /// <summary>
+    /// Feu d'artifice : fusee + traînee, explosion tricolore armenienne, puis
+    /// rassemblement des particules en HETIC. Travaille en orientation native.
+    /// </summary>
+    private Color FireworkPhase(int column, int row, int columns, int rows, float t)
+    {
+        if (_firework == null || !_firework.Matches(columns, rows))
+        {
+            _firework = new FireworkField();
+            int bandW = (bodyTextBand != null && bodyTextBand.Length > 0) ? bodyTextBand[0].Length : 20;
+            int scale = Mathf.Max(1, Mathf.FloorToInt(columns * 0.86f / bandW));
+            // Palette du drapeau armenien : rouge, bleu, orange.
+            var palette = new Color[] { flagTop, flagMiddle, flagBottom };
+            _firework.Build(columns, rows, bodyTextBand, scale, 0.5f, palette, 424242);
+        }
+
+        _firework.Simulate(t, _auBeat, _auHigh);
+        return _firework.Sample(column, row);
     }
 
     /// <summary>
@@ -441,9 +465,10 @@ public class WallEffectBehaviour : PlayableBehaviour
     private Color LockerTone(int key, int beatIndex)
     {
         int seed = Hash(key + beatIndex * 7919) % 100;
-        if (seed < 34) return Color.black;        // casier eteint
-        if (seed < 70) return lockerDark;         // anthracite
-        return lockerBright;                      // creme
+        if (seed < 32) return Color.black;        // casier eteint
+        if (seed < 60) return lockerDark;         // gris metal / anthracite
+        if (seed < 86) return lockerBright;       // creme
+        return primaryColor;                      // touche jaune post-it
     }
 
     // -----------------------------------------------------------------------
