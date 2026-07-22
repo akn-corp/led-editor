@@ -50,7 +50,7 @@ public static class EntityTextTrackBinder
         director.RebuildGraph();
         director.time = t;
         director.Evaluate();
-        if (wasPlaying || director.state != PlayState.Playing)
+        if (wasPlaying)
             director.Play();
 
         Debug.Log($"[TimelineBinder] text={textBound}, entity={entityBound}, director reconstruit @ t={t:F2}s");
