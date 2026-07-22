@@ -58,6 +58,11 @@ public class PalomaRumbaTextBehaviour : PlayableBehaviour
 
     public void Apply(EntityManager entityManager, float clipTime, float clipDuration)
     {
+        Apply(entityManager, null, clipTime, clipDuration);
+    }
+
+    public void Apply(EntityManager entityManager, LedWallVisualizer visualizer, float clipTime, float clipDuration)
+    {
         if (entityManager == null || !WallMapping.IsInitialized) return;
 
         float duration = clipDuration > 0f ? clipDuration : 14f;
@@ -83,8 +88,17 @@ public class PalomaRumbaTextBehaviour : PlayableBehaviour
         int cols = WallMapping.Columns;
         int rows = WallMapping.VisibleRows;
         EnsureBuffer(cols, rows);
+
+        if (visualizer != null)
+            _visualizer = visualizer;
         if (_visualizer == null)
             _visualizer = Object.FindFirstObjectByType<LedWallVisualizer>();
+        if (_visualizer == null)
+        {
+            Debug.LogWarning("[PalomaRumba] LedWallVisualizer introuvable — mur pas encore construit.");
+            return;
+        }
+        _visualizer.SetSuppressSingleUpdates(true);
 
         for (int y = 0; y < rows; y++)
         {

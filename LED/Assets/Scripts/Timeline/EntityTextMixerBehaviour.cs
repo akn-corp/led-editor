@@ -49,9 +49,9 @@ public class EntityTextMixerBehaviour : PlayableBehaviour
                 best.fitToWall);
             _wasActive = true;
         }
-        else if (_wasActive)
+        // Ne pas Clear(black) en fin de clip : FluidWall / Paloma peignent le mur ensuite.
+        else
         {
-            painter.Clear(Color.black);
             _wasActive = false;
         }
     }

@@ -1,28 +1,28 @@
-// Piste Timeline mur fluide. Binding : LedWall (LedWallVisualizer).
+// Piste Timeline média mur (GIF / frames). Binding : LedWallVisualizer.
 
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
 
-[TrackClipType(typeof(FluidWallClip))]
+[TrackClipType(typeof(WallMediaClip))]
 [TrackBindingType(typeof(LedWallVisualizer))]
-[TrackColor(0.15f, 0.55f, 0.95f)]
-public class FluidWallTrack : TrackAsset
+[TrackColor(0.95f, 0.45f, 0.15f)]
+public class WallMediaTrack : TrackAsset
 {
     public override Playable CreateTrackMixer(PlayableGraph graph, GameObject go, int inputCount)
     {
-        return ScriptPlayable<FluidWallMixerBehaviour>.Create(graph, inputCount);
+        return ScriptPlayable<WallMediaMixerBehaviour>.Create(graph, inputCount);
     }
 }
 
-public class FluidWallMixerBehaviour : PlayableBehaviour
+public class WallMediaMixerBehaviour : PlayableBehaviour
 {
     public override void ProcessFrame(Playable playable, FrameData info, object playerData)
     {
         var wall = playerData as LedWallVisualizer;
         if (wall == null || !wall.IsBuilt || wall.EntityManager == null) return;
 
-        FluidWallBehaviour best = null;
+        WallMediaBehaviour best = null;
         Playable bestPlayable = default;
         float bestWeight = 0f;
 
@@ -32,7 +32,7 @@ public class FluidWallMixerBehaviour : PlayableBehaviour
             float weight = playable.GetInputWeight(i);
             if (weight <= 0f) continue;
 
-            var input = (ScriptPlayable<FluidWallBehaviour>)playable.GetInput(i);
+            var input = (ScriptPlayable<WallMediaBehaviour>)playable.GetInput(i);
             var behaviour = input.GetBehaviour();
             if (behaviour == null) continue;
 

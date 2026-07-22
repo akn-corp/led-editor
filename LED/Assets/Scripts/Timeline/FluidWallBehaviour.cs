@@ -14,14 +14,28 @@ public class FluidWallBehaviour : PlayableBehaviour
 
     public void Apply(EntityManager entityManager, float clipTime)
     {
+        Apply(entityManager, null, clipTime);
+    }
+
+    public void Apply(EntityManager entityManager, LedWallVisualizer visualizer, float clipTime)
+    {
         if (entityManager == null || !WallMapping.IsInitialized) return;
 
         int cols = WallMapping.Columns;
         int rows = WallMapping.VisibleRows;
         EnsureBuffer(cols, rows);
+
+        if (visualizer != null)
+            _visualizer = visualizer;
         if (_visualizer == null)
             _visualizer = Object.FindFirstObjectByType<LedWallVisualizer>();
+        if (_visualizer == null)
+        {
+            Debug.LogWarning("[FluidWall] LedWallVisualizer introuvable — mur pas encore construit.");
+            return;
+        }
 
+        _visualizer.SetSuppressSingleUpdates(true);
         float time = clipTime * speed;
         float invCols = 1f / Mathf.Max(1, cols - 1);
         float invRows = 1f / Mathf.Max(1, rows - 1);
