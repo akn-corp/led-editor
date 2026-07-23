@@ -1,5 +1,5 @@
 // Relie les pistes Timeline :
-//   Mur (texte / fluid / paloma / media) → composants sur LedWall
+//   Mur (texte / fluid / paloma / media / wall effect) → composants sur LedWall / EntityManager
 //   Devices (lyres / projecteur) → DeviceManager
 
 using UnityEngine;
@@ -49,7 +49,8 @@ public static class EntityTextTrackBinder
             foreach (var track in timeline.GetOutputTracks())
             {
                 if (track is FluidWallTrack || track is PalomaRumbaTrack || track is WallMediaTrack
-                    || track is RippleWaveTrack || track is ConvergenceGridTrack)
+                    || track is RippleWaveTrack || track is ConvergenceGridTrack
+                    || track is WallEffectTrack)
                 {
                     wall = director.GetGenericBinding(track) as LedWallVisualizer;
                     if (wall != null) break;
@@ -92,7 +93,8 @@ public static class EntityTextTrackBinder
                 director.SetGenericBinding(track, wall);
                 wallBound++;
             }
-            else if ((track is RippleWaveTrack || track is ConvergenceGridTrack) && entityManager != null)
+            else if ((track is RippleWaveTrack || track is ConvergenceGridTrack || track is WallEffectTrack)
+                     && entityManager != null)
             {
                 director.SetGenericBinding(track, entityManager);
                 wallBound++;
