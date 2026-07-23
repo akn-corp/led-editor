@@ -20,7 +20,9 @@ public enum WallEffectKind
     Pulse,          // flash rythmique sur le tempo
     Drawers,        // mur de tiroirs de classeurs facon decor de scene
     DancersTrail,   // silhouettes sur dalles lumineuses, qui impriment un mot
-    SequenceA3,     // sequence complete de 7 secondes (partie A3)
+    SequenceA3,     // sequence complete (casiers + feu d'artifice) — historique
+    Casiers,        // seulement le mur de casiers 4x3
+    FeuArtifice,    // seulement fusee -> explosion -> HETIC
     LiquidChrome,   // mercure liquide / chrome reflechissant
     SonicRings,     // ondes de choc synchronisees au kick (audio-reactif)
 }

@@ -139,6 +139,12 @@ public class WallEffectBehaviour : PlayableBehaviour
             case WallEffectKind.SequenceA3:
                 return EvaluateSequenceA3(column, row, columns, rows, localTime);
 
+            case WallEffectKind.Casiers:
+                return EvaluateCasiers(column, row, columns, rows, localTime);
+
+            case WallEffectKind.FeuArtifice:
+                return EvaluateFeuArtifice(column, row, columns, rows, localTime);
+
             case WallEffectKind.LiquidChrome:
                 return EvaluateLiquidChrome(column, row, columns, rows, localTime);
 
@@ -280,6 +286,24 @@ public class WallEffectBehaviour : PlayableBehaviour
     //   5-7s  silhouette acrobatique dont les poses dessinent H E T I C
     // =======================================================================
 
+    /// <summary>Effet autonome : uniquement le mur de casiers 4x3.</summary>
+    private Color EvaluateCasiers(int column, int row, int columns, int rows, float localTime)
+    {
+        int y = rows - 1 - row;
+        return LockerWall(column, y, columns, rows, localTime);
+    }
+
+    /// <summary>
+    /// Effet autonome : uniquement le feu d'artifice (fusee -> explosion ->
+    /// rassemblement HETIC). Le temps part de 0 au debut du clip, donc la fusee
+    /// demarre des que le clip commence.
+    /// </summary>
+    private Color EvaluateFeuArtifice(int column, int row, int columns, int rows, float localTime)
+    {
+        FetchAudio(localTime);
+        return FireworkPhase(column, row, columns, rows, localTime);
+    }
+
     private Color EvaluateSequenceA3(int column, int row, int columns, int rows, float localTime)
     {
         // Le mur est indexe avec la ligne 0 EN HAUT (c'est la convention du
@@ -315,11 +339,11 @@ public class WallEffectBehaviour : PlayableBehaviour
         if (_firework == null || !_firework.Matches(columns, rows))
         {
             _firework = new FireworkField();
-            int bandW = (bodyTextBand != null && bodyTextBand.Length > 0) ? bodyTextBand[0].Length : 20;
-            int scale = Mathf.Max(1, Mathf.FloorToInt(columns * 0.86f / bandW));
             // Palette du drapeau armenien : rouge, bleu, orange.
             var palette = new Color[] { flagTop, flagMiddle, flagBottom };
-            _firework.Build(columns, rows, bodyTextBand, scale, 0.5f, palette, 424242);
+            // Les particules se rassemblent pour dessiner le LOGO HETIC (cuit
+            // depuis le PNG), au lieu d'ecrire le mot.
+            _firework.BuildFromGrid(columns, rows, HeticLogo.Grid(), palette, 424242);
         }
 
         _firework.Simulate(t, _auBeat, _auHigh);
@@ -397,64 +421,58 @@ public class WallEffectBehaviour : PlayableBehaviour
     /// </summary>
     private Color LockerWall(int column, int row, int columns, int rows, float time)
     {
-        int pitchY = lockerHeight + lockerGap;
-        int cellY = row / pitchY;
-        int insideY = row - cellY * pitchY;
+        // Grille REGULIERE 4 x 3 : tous les casiers ont exactement la meme
+        // taille, parfaitement alignes. De tres gros casiers horizontaux, joint fin.
+        const int COLS = 4, ROWS = 3;
+        const int gap = 2;
 
-        // Decalage horizontal propre a chaque rangee : la grille se desaligne.
-        int rowShift = Hash(cellY * 31 + 7) % Mathf.Max(1, lockerWidth);
+        float cellW = columns / (float)COLS;
+        float cellH = rows / (float)ROWS;
 
-        int pitchX = lockerWidth + lockerGap;
-        int shifted = column + rowShift;
-        int cellX = shifted / pitchX;
-        int insideX = shifted - cellX * pitchX;
+        int cellX = Mathf.Clamp((int)(column / cellW), 0, COLS - 1);
+        int cellY = Mathf.Clamp((int)(row / cellH), 0, ROWS - 1);
 
-        // Joint noir entre les casiers.
-        if (insideX >= lockerWidth || insideY >= lockerHeight) return Color.black;
+        float insideX = column - cellX * cellW;
+        float insideY = row - cellY * cellH;
 
-        Color body = LockerBody(cellX, cellY, time, columns);
+        // Joint fin et net.
+        if (insideX < gap || insideX > cellW - gap ||
+            insideY < gap || insideY > cellH - gap)
+            return Color.black;
+
+        int key = cellY * COLS + cellX;
+        Color body = LockerBody(key, time);
         if (body.maxColorComponent <= 0.001f) return Color.black;
 
-        // --- Etiquette : petit rectangle clair, cadre visible ---
-        float labelHalfW = lockerWidth * 0.21f;
-        float labelHalfH = Mathf.Max(1.2f, lockerHeight * 0.10f);
-        float labelCX = lockerWidth * 0.5f;
-        float labelCY = lockerHeight * 0.60f;
+        // UNE seule poignee/etiquette lumineuse, centree horizontalement.
+        float labelHalfW = cellW * 0.26f;
+        float labelHalfH = Mathf.Max(1.5f, cellH * 0.11f);
+        float labelCX = cellW * 0.5f;
+        float labelCY = cellH * 0.5f;
 
         float dx = Mathf.Abs(insideX - labelCX);
         float dy = Mathf.Abs(insideY - labelCY);
 
         if (dx <= labelHalfW && dy <= labelHalfH)
         {
-            bool onBorder = dx > labelHalfW - 1.2f || dy > labelHalfH - 1.2f;
-
-            // Sur un casier sombre l'etiquette ressort en clair ; sur un
-            // casier clair c'est son cadre qui la dessine.
+            bool onBorder = dx > labelHalfW - 1.5f || dy > labelHalfH - 1.5f;
             bool darkBody = body.maxColorComponent < 0.5f;
-            if (darkBody) return onBorder ? lockerBright : lockerBright * 0.75f;
-            return onBorder ? lockerDark : body * 0.94f;
+            Color handle = darkBody ? lockerBright : lockerBright * 1.06f;
+            Color frame = darkBody ? lockerDark * 1.4f : lockerDark;
+            return onBorder ? frame : handle;
         }
 
-        // Legere degradation verticale : le haut du casier accroche la lumiere.
-        float shade = Mathf.Lerp(1.06f, 0.88f, insideY / (float)lockerHeight);
+        // Leger degrade vertical.
+        float shade = Mathf.Lerp(1.05f, 0.9f, insideY / cellH);
         return body * shade;
     }
 
-    /// <summary>
-    /// Teinte d'un casier, avec fondu entre l'etat precedent et le suivant :
-    /// le mur respire au rythme au lieu de clignoter sechement.
-    /// </summary>
-    private Color LockerBody(int cellX, int cellY, float time, int columns)
+        /// <summary>Teinte d'un casier, fondu doux entre etats successifs.</summary>
+    private Color LockerBody(int key, float time)
     {
-        int cellsPerRow = Mathf.Max(1, columns / Mathf.Max(1, lockerWidth)) + 2;
-        int key = cellY * cellsPerRow + cellX;
-
         float beat = time * bpm / 60f;
         int beatIndex = Mathf.FloorToInt(beat);
         float fraction = beat - beatIndex;
-
-        // Transition douce sur le premier tiers du temps : le mur respire au
-        // lieu de clignoter sechement.
         float blend = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(fraction / 0.33f));
 
         Color previous = LockerTone(key, beatIndex - 1);
@@ -462,7 +480,7 @@ public class WallEffectBehaviour : PlayableBehaviour
         return Color.Lerp(previous, next, blend);
     }
 
-    private Color LockerTone(int key, int beatIndex)
+        private Color LockerTone(int key, int beatIndex)
     {
         int seed = Hash(key + beatIndex * 7919) % 100;
         if (seed < 32) return Color.black;        // casier eteint

@@ -21,9 +21,9 @@ public class FireworkField
     private float _lastTime = -1f;
 
     // Etapes (secondes depuis le debut de la phase feu d'artifice).
-    public float LaunchDur = 1.0f;   // duree de la montee
-    public float FreeDur = 0.9f;     // vol libre apres explosion
-    public float GatherDur = 1.7f;   // rassemblement vers les lettres
+    public float LaunchDur = 1.0f;   // duree de la montee de la fusee
+    public float FreeDur = 1.1f;     // vol libre : la boule s'etale et retombe (feu d'artifice)
+    public float GatherDur = 1.7f;   // rassemblement des particules vers le logo
 
     private float _apexX, _apexY;    // point d'explosion
     private const float Gravity = 34f;
@@ -75,7 +75,7 @@ public class FireworkField
                 }
             }
 
-        _n = Mathf.Clamp(Mathf.RoundToInt(targetCount * 1.5f), 250, 4000);
+        _n = Mathf.Clamp(Mathf.RoundToInt(targetCount * 2.0f), 300, 5000);
         _vx = new float[_n]; _vy = new float[_n];
         _tx = new float[_n]; _ty = new float[_n];
         _col = new Color[_n]; _phase = new float[_n];
@@ -91,9 +91,63 @@ public class FireworkField
 
             // Explosion radiale : angle uniforme, vitesse variable.
             float ang = R() * 6.2832f;
-            float spd = 32f + R() * 60f;
+            float spd = 42f + R() * 72f;
             _vx[i] = Mathf.Cos(ang) * spd;
             _vy[i] = Mathf.Sin(ang) * spd - 12f; // petit biais vers le haut
+
+            _col[i] = palette[rng.Next(palette.Length)];
+            _phase[i] = R() * 6.2832f;
+        }
+    }
+
+    /// <summary>
+    /// Variante : les cibles viennent d'une grille 128x128 (logo), pas d'un mot.
+    /// grid[row][col], row 0 en haut => logo a l'endroit.
+    /// </summary>
+    public void BuildFromGrid(int cols, int rows, bool[][] grid, Color[] palette, int seed)
+    {
+        _cols = cols; _rows = rows;
+        _buf = new Color[cols * rows];
+        _apexX = cols * 0.5f;
+        _apexY = rows * 0.30f;
+
+        // Collecte des cibles = cellules allumees de la grille.
+        int gh = grid.Length;
+        int gw = grid.Length > 0 ? grid[0].Length : 0;
+        // Recentre/echelle la grille sur le mur si tailles differentes.
+        float sx = cols / (float)gw;
+        float sy = rows / (float)gh;
+
+        var txList = new System.Collections.Generic.List<float>();
+        var tyList = new System.Collections.Generic.List<float>();
+        for (int y = 0; y < gh; y++)
+            for (int x = 0; x < gw; x++)
+                if (grid[y][x])
+                {
+                    txList.Add(x * sx);
+                    tyList.Add(y * sy);
+                }
+
+        int targetCount = Mathf.Max(1, txList.Count);
+
+        _n = Mathf.Clamp(Mathf.RoundToInt(targetCount * 1.6f), 300, 6000);
+        _vx = new float[_n]; _vy = new float[_n];
+        _tx = new float[_n]; _ty = new float[_n];
+        _col = new Color[_n]; _phase = new float[_n];
+
+        var rng = new System.Random(seed);
+        float R() => (float)rng.NextDouble();
+
+        for (int i = 0; i < _n; i++)
+        {
+            int t = rng.Next(targetCount);
+            _tx[i] = txList[t];
+            _ty[i] = tyList[t];
+
+            float ang = R() * 6.2832f;
+            float spd = 42f + R() * 72f;
+            _vx[i] = Mathf.Cos(ang) * spd;
+            _vy[i] = Mathf.Sin(ang) * spd - 12f;
 
             _col[i] = palette[rng.Next(palette.Length)];
             _phase[i] = R() * 6.2832f;
@@ -104,40 +158,39 @@ public class FireworkField
     {
         if (Mathf.Abs(t - _lastTime) < 1e-4f) return;
         _lastTime = t;
-        System.Array.Clear(_buf, 0, _buf.Length);
+
+        // Trainees : on ESTOMPE au lieu d'effacer -> queues lumineuses, rendu feu d'artifice.
+        const float trail = 0.55f;
+        for (int i = 0; i < _buf.Length; i++)
+        {
+            _buf[i].r *= trail; _buf[i].g *= trail; _buf[i].b *= trail;
+        }
 
         // --- 1. TIR : la fusee monte, traînee de fumee derriere ---
         if (t < LaunchDur)
         {
             float u = t / LaunchDur;
-            float ease = 1f - (1f - u) * (1f - u);          // easeOut
-            float ry = Mathf.Lerp(_rows - 1, _apexY, ease); // du bas vers le sommet
-
-            // Traînee/fumee : sous la fusee, en s'estompant.
-            for (int s = 0; s < 26; s++)
+            float ease = 1f - (1f - u) * (1f - u);
+            float ry = Mathf.Lerp(_rows - 1, _apexY, ease);
+            for (int sIdx = 0; sIdx < 26; sIdx++)
             {
-                float sy = ry + s * 1.6f;
+                float sy = ry + sIdx * 1.6f;
                 if (sy >= _rows) break;
-                float fade = (1f - s / 26f);
-                float jitter = Mathf.Sin(t * 20f + s) * (0.6f + s * 0.12f);
-                var smoke = new Color(0.5f, 0.48f, 0.5f) * (fade * fade * 0.5f);
-                Splat(_apexX + jitter, sy, smoke);
+                float fd = (1f - sIdx / 26f);
+                float jit = Mathf.Sin(t * 20f + sIdx) * (0.6f + sIdx * 0.12f);
+                Splat(_apexX + jit, sy, new Color(0.5f, 0.48f, 0.5f) * (fd * fd * 0.5f));
             }
-
-            // Tete de fusee : point vif jaune-blanc + etincelles.
             Splat(_apexX, ry, new Color(1f, 0.95f, 0.7f) * 1.4f);
-            Splat(_apexX + 0.6f, ry - 0.4f, Color.white * 0.6f);
             return;
         }
 
-        // --- 2 & 3. Explosion puis rassemblement ---
+        // --- 2. Explosion : la boule s'etale et retombe, puis rassemblement en logo ---
         float te = t - LaunchDur;
 
         for (int i = 0; i < _n; i++)
         {
-            float px, py;
+            float px, py, settle = 1f, formGlow = 0f;
 
-            // Position de vol libre : balistique avec gravite.
             float freeX = _apexX + _vx[i] * te;
             float freeY = _apexY + _vy[i] * te + 0.5f * Gravity * te * te;
 
@@ -147,20 +200,29 @@ public class FireworkField
             }
             else
             {
-                // Gel de la position a la fin du vol libre, puis attraction.
-                float endX = _apexX + _vx[i] * FreeDur + 0f;
+                float endX = _apexX + _vx[i] * FreeDur;
                 float endY = _apexY + _vy[i] * FreeDur + 0.5f * Gravity * FreeDur * FreeDur;
 
-                float g = Mathf.Clamp01((te - FreeDur) / GatherDur);
-                g = g * g * (3f - 2f * g); // smoothstep : ralentit puis se pose
-
+                float raw = Mathf.Clamp01((te - FreeDur) / GatherDur);
+                float g = raw * raw * raw * (raw * (raw * 6f - 15f) + 10f); // smootherstep
                 px = Mathf.Lerp(endX, _tx[i], g);
                 py = Mathf.Lerp(endY, _ty[i], g);
+                settle = 1f - g;
+
+                formGlow = Mathf.SmoothStep(0.7f, 1f, g);
+                if (raw >= 1f)
+                {
+                    float sinceForm = te - (FreeDur + GatherDur);
+                    formGlow = Mathf.Lerp(1f, 0.18f, Mathf.Clamp01(sinceForm * 1.3f));
+                }
             }
 
-            // Scintillement : sur les aigus + oscillation propre.
-            float spark = 0.75f + 0.25f * Mathf.Sin(te * 22f + _phase[i]) + high * 0.4f + beat * 0.2f;
-            Splat(px, py, _col[i] * spark);
+            float jx = Mathf.Sin(te * 18f + _phase[i]) * settle * 0.7f;
+            float jy = Mathf.Cos(te * 15f + _phase[i] * 1.3f) * settle * 0.7f;
+            float spark = 0.82f + high * 0.4f + beat * 0.2f
+                          + 0.18f * Mathf.Sin(te * 22f + _phase[i]) * (0.5f + settle);
+            Color c = _col[i] * spark + Color.white * (formGlow * 0.55f);
+            Splat(px + jx, py + jy, c);
         }
     }
 
