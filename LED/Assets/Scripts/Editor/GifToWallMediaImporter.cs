@@ -1,6 +1,6 @@
 #if UNITY_EDITOR
 // Menu : LED > Import GIF or Video as Wall Media…
-// Extrait les frames (ffmpeg) → PNG 128×128 + crée un WallMediaSequence.
+// Extrait les frames (ffmpeg) → PNG à la résolution du mur (WallMapping) + WallMediaSequence.
 
 using System.Diagnostics;
 using System.IO;
@@ -77,13 +77,20 @@ public static class GifToWallMediaImporter
         foreach (var old in Directory.GetFiles(absDir, "frame_*.png"))
             File.Delete(old);
 
+        int cols = WallMapping.IsInitialized && WallMapping.Columns > 0
+            ? WallMapping.Columns
+            : 128;
+        int rows = WallMapping.IsInitialized && WallMapping.VisibleRows > 0
+            ? WallMapping.VisibleRows
+            : 128;
+
         // Pixel art : neighbor. Vidéo : bilinear (flags=bilinear) pour éviter le crénelage.
         string scaleFlags = ext == ".gif" ? "neighbor" : "bilinear";
         string pattern = Path.Combine(absDir, "frame_%02d.png");
         var psi = new ProcessStartInfo
         {
             FileName = ffmpeg,
-            Arguments = $"-y -i \"{destMedia}\" -vf \"scale=128:128:flags={scaleFlags}\" \"{pattern}\"",
+            Arguments = $"-y -i \"{destMedia}\" -vf \"scale={cols}:{rows}:flags={scaleFlags}\" \"{pattern}\"",
             UseShellExecute = false,
             RedirectStandardError = true,
             CreateNoWindow = true,
@@ -139,7 +146,7 @@ public static class GifToWallMediaImporter
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
 
-        string ok = $"{textures.Count} frames → {seqPath}";
+        string ok = $"{textures.Count} frames → {seqPath} ({cols}×{rows})";
         if (showDialogs)
         {
             EditorUtility.DisplayDialog(

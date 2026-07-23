@@ -25,6 +25,16 @@ public static class MainSceneSetup
         Debug.Log("[MainSceneSetup] Main.unity câblée et sauvegardée.");
     }
 
+    [MenuItem("LED/Add Viewport Demo Painter (32×32 test)")]
+    public static void AddViewportDemoPainter()
+    {
+        var installation = GameObject.Find("Installation") ?? new GameObject("Installation");
+        var painter = GetOrAddComponent<ViewportDemoPainter>(installation, "ViewportDemoPainter");
+        Selection.activeGameObject = painter.gameObject;
+        EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+        Debug.Log("[MainSceneSetup] ViewportDemoPainter ajouté — activer le profil demo-32x32 puis Play.");
+    }
+
     static void EnsureInstallationHierarchy()
     {
         var installation = GameObject.Find("Installation") ?? new GameObject("Installation");
