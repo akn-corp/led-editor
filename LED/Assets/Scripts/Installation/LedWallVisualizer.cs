@@ -1,4 +1,4 @@
-// Affichage 128×128 du mur Glassworks via une texture (pas de GameObject par LED).
+// Affichage du mur Glassworks via une texture (résolution = wall-bands / WallMapping).
 
 using System.Collections.Generic;
 using UnityEngine;

@@ -37,6 +37,10 @@ public static class WallBandsValidator
             return new[] { "columns <= 0" };
         if (config.columns != config.bands.Length)
             return new[] { $"columns ({config.columns}) ≠ bands.Length ({config.bands.Length})" };
+        if (config.visibleRows < 0)
+            return new[] { "visibleRows < 0" };
+        if (config.originRow < 0)
+            return new[] { "originRow < 0" };
 
         for (int i = 0; i < config.bands.Length; i++)
         {

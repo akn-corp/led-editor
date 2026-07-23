@@ -53,17 +53,19 @@ public class RippleWaveBehaviour : PlayableBehaviour
             Mathf.Max(Dist(0f, 0f, originCol, originRow), Dist(cols - 1, 0f, originCol, originRow)),
             Mathf.Max(Dist(0f, rows - 1, originCol, originRow), Dist(cols - 1, rows - 1, originCol, originRow)));
         float invCorner = 1f / Mathf.Max(1f, cornerDist);
-        float invWave = 1f / Mathf.Max(2f, wavelengthCells);
-        // Cœur fin (gaussien) + halo large et sombre -> aspect tube néon.
-        float w = Mathf.Max(0.4f, lineWidthCells);
+
+        float wavelength = Mathf.Max(2f, WallMapping.ScaleCellsFrom128(wavelengthCells));
+        float lineW = Mathf.Max(0.4f, WallMapping.ScaleCellsFrom128(lineWidthCells));
+        float halo = Mathf.Max(1f, WallMapping.ScaleCellsFrom128(haloCells));
+        float edgeNoise = WallMapping.ScaleCellsFrom128(edgeNoiseCells);
+
+        float invWave = 1f / wavelength;
+        float w = lineW;
         float invWidthSq = 1f / (2f * w * w);
-        // Halo asymétrique : la lueur bave davantage vers l'EXTÉRIEUR de l'arc (comme la
-        // brume néon réelle) que vers l'intérieur.
-        float invHaloOut = 1f / Mathf.Max(1f, haloCells);
-        float invHaloIn = 1f / Mathf.Max(1f, haloCells * 0.4f);
-        // Bruit organique : ondule le rayon de l'arc pour casser la symétrie parfaite.
-        const float noiseFreq = 4.5f;   // nb d'ondulations autour de l'arc
-        const float noiseSpeed = 0.35f; // évolution temporelle du bruit
+        float invHaloOut = 1f / halo;
+        float invHaloIn = 1f / Mathf.Max(1f, halo * 0.4f);
+        const float noiseFreq = 4.5f;
+        const float noiseSpeed = 0.35f;
 
         for (int row = 0; row < rows; row++)
         {
@@ -75,33 +77,26 @@ public class RippleWaveBehaviour : PlayableBehaviour
                 float dx = col - originCol;
                 float dist = Mathf.Sqrt(dx * dx + dy * dy);
 
-                // Ondulation du rayon selon l'angle (bords turbulents/atmosphériques).
-                // Deux octaves de bruit pour un chaos plus organique, atténuées près de
-                // l'origine (sinon petit rayon = déformation en étoile).
-                if (edgeNoiseCells > 0.01f)
+                if (edgeNoise > 0.01f)
                 {
                     float ang = Mathf.Atan2(dy, dx);
                     float n1 = Mathf.PerlinNoise(ang * noiseFreq + 13.7f, clipTime * noiseSpeed) - 0.5f;
                     float n2 = Mathf.PerlinNoise(ang * noiseFreq * 2.3f + 51.3f, clipTime * noiseSpeed * 1.7f) - 0.5f;
                     float n = n1 + 0.5f * n2;
-                    float radialRamp = Mathf.Clamp01(dist * 0.03f); // ~0 au centre -> 1 vers ~33 cellules
-                    dist += n * 2f * edgeNoiseCells * radialRamp;
+                    float radialRamp = Mathf.Clamp01(dist * (0.03f * 128f / Mathf.Max(1, cols)));
+                    dist += n * 2f * edgeNoise * radialRamp;
                 }
 
-                // Onde concentrique : la phase avance dans le temps -> arcs qui grandissent.
                 float phase = dist * invWave - clipTime * wavesPerSecond;
-                float f = phase - Mathf.Floor(phase);              // 0..1 dans le cycle
-                bool outward = f < 0.5f;                            // côté extérieur de l'arc ?
-                float dRing = (outward ? f : 1f - f) * wavelengthCells; // distance (cellules) à l'arc
+                float f = phase - Mathf.Floor(phase);
+                bool outward = f < 0.5f;
+                float dRing = (outward ? f : 1f - f) * wavelength;
 
-                float core = Mathf.Exp(-(dRing * dRing) * invWidthSq);  // tube fin et vif
-                float halo = Mathf.Exp(-dRing * (outward ? invHaloOut : invHaloIn));
+                float core = Mathf.Exp(-(dRing * dRing) * invWidthSq);
+                float haloVal = Mathf.Exp(-dRing * (outward ? invHaloOut : invHaloIn));
 
-                // Atténuation douce : au coin le plus éloigné il reste (1 - distanceFade).
                 float atten = Mathf.Clamp01(1f - distanceFade * (dist * invCorner));
-
-                // Le cœur passe en HDR (>1) pour le bloom ; le halo reste sombre (dégradé gris).
-                float value = (core * glowIntensity + halo * haloStrength) * atten * weight;
+                float value = (core * glowIntensity + haloVal * haloStrength) * atten * weight;
 
                 Color rgb = tint * value;
                 _displayPixels[texRow * cols + col] = rgb;

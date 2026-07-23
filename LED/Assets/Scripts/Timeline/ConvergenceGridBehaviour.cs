@@ -67,16 +67,19 @@ public class ConvergenceGridBehaviour : PlayableBehaviour
         }
 
         // --- Géométrie en espace-cellules (carrés garantis) ---
-        int sqCols = Mathf.Max(1, squareColumns);
-        float pitch = cols / (float)sqCols;                 // cellules par module (horizontal)
-        int sqRows = Mathf.Max(1, Mathf.FloorToInt(rows / pitch)); // rangées déduites -> carrés
+        // squareColumns / épaisseurs authorés pour 128 → adapter au viewport
+        float cellScale = cols / 128f;
+        int sqCols = Mathf.Max(1, Mathf.RoundToInt(squareColumns * cellScale));
+        if (sqCols > cols / 2) sqCols = Mathf.Max(1, cols / 4);
+        float pitch = cols / (float)sqCols;
+        int sqRows = Mathf.Max(1, Mathf.FloorToInt(rows / pitch));
         float usedH = sqRows * pitch;
-        float offsetY = (rows - usedH) * 0.5f;              // centrage vertical
-        float offsetX = 0f;                                 // pleine largeur
+        float offsetY = (rows - usedH) * 0.5f;
+        float offsetX = 0f;
 
-        float halfSide = pitch * squareFillRatio * 0.5f;    // demi-côté du carré (cellules)
-        float edge = Mathf.Clamp(pitch * 0.06f, 0.6f, 2.5f); // adoucissement des bords (cellules)
-        float halfThick = lineThicknessCells * 0.5f;
+        float halfSide = pitch * squareFillRatio * 0.5f;
+        float edge = Mathf.Clamp(pitch * 0.06f, 0.35f, 2.5f);
+        float halfThick = Mathf.Max(0.5f, lineThicknessCells * cellScale) * 0.5f;
 
         for (int row = 0; row < rows; row++)
         {

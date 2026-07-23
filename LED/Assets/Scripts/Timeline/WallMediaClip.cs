@@ -1,4 +1,4 @@
-// Clip Timeline : GIF / séquence d'images → mur LED 128×128.
+// Clip Timeline : GIF / séquence d'images → mur LED (résolution WallMapping).
 
 using UnityEngine;
 using UnityEngine.Playables;

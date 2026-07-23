@@ -1,4 +1,4 @@
-// Mur Glassworks 128×128 — texture LED + animations.
+// Mur Glassworks — texture LED + animations (résolution via wall-bands).
 //
 // Montage Timeline (recommandé) :
 //   animationMode = None

@@ -107,10 +107,21 @@ public class PalomaRumbaTextBehaviour : PlayableBehaviour
         if (entityManager == null || !WallMapping.IsInitialized) return;
 
         // Lazy-init de la bande si le type de police change
-        if (_cachedFontType != fontType || _textBand == null)
+        int cols = WallMapping.Columns;
+        int rows = WallMapping.VisibleRows;
+
+        // Sur viewport bas-résolution, la police 8×12 est trop grosse → micro 3×5
+        PalomaFontType effectiveFont = fontType;
+        if (cols <= 48 && fontType == PalomaFontType.Bold_8x12)
+            effectiveFont = PalomaFontType.Micro_3x5;
+
+        if (_cachedFontType != effectiveFont || _textBand == null)
         {
-            _cachedFontType = fontType;
+            _cachedFontType = effectiveFont;
+            var previous = fontType;
+            fontType = effectiveFont;
             InitTextBand("PALOMA RUMBA ");
+            fontType = previous;
         }
 
         float duration = clipDuration > 0f ? clipDuration : 14f;
@@ -133,8 +144,6 @@ public class PalomaRumbaTextBehaviour : PlayableBehaviour
         float beat = clipTime * bpm / 60f;
         bool isFlash = clipTime >= fade && clipTime <= duration - fade && (beat % 16f) > 15.2f;
 
-        int cols = WallMapping.Columns;
-        int rows = WallMapping.VisibleRows;
         EnsureBuffer(cols, rows);
 
         if (visualizer != null)
@@ -148,8 +157,9 @@ public class PalomaRumbaTextBehaviour : PlayableBehaviour
         }
         _visualizer.SetSuppressSingleUpdates(true);
 
-        int charHeight = (fontType == PalomaFontType.Bold_8x12) ? 12 : 5;
-        int currentBandHeight = Mathf.Max(charHeight + 1, bandHeight);
+        int charHeight = (effectiveFont == PalomaFontType.Bold_8x12) ? 12 : 5;
+        int scaledBand = Mathf.Max(charHeight + 1, Mathf.RoundToInt(bandHeight * (rows / 128f)));
+        int currentBandHeight = Mathf.Max(charHeight + 1, scaledBand);
 
         for (int y = 0; y < rows; y++)
         {
