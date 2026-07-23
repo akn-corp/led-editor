@@ -1,5 +1,8 @@
 // Encodeur binaire LEDS + DEVS (UDP :6455) — aligné sur led-routing-hub/docs/protocole-state.md
 // et led-studio-editor/electron/protocol.ts.
+//
+// Hot path Play Mode : LedFrameWriter (buffers préalloués, zéro alloc/frame).
+// Les méthodes Encode* ci-dessous restent disponibles (tests / outils) mais allouent.
 
 using System;
 using System.Collections.Generic;
@@ -72,6 +75,23 @@ public static class StateProtocol
         }
     }
 
+    public static void WriteLedsChunkHeader(
+        byte[] buf,
+        ushort frameId,
+        byte chunkIndex,
+        byte chunkCount,
+        ushort startEntityId,
+        ushort entryCount)
+    {
+        Buffer.BlockCopy(LedMagic, 0, buf, 0, 4);
+        buf[4] = 1;
+        WriteUInt16LE(buf, 5, frameId);
+        buf[7] = chunkIndex;
+        buf[8] = chunkCount;
+        WriteUInt16LE(buf, 9, startEntityId);
+        WriteUInt16LE(buf, 11, entryCount);
+    }
+
     public static byte[] EncodeLedsChunk(
         int frameId,
         int chunkIndex,
@@ -82,20 +102,20 @@ public static class StateProtocol
         int entryCount = colors.Length;
         var buf = new byte[LedHeaderSize + entryCount * LedEntrySize];
 
-        Buffer.BlockCopy(LedMagic, 0, buf, 0, 4);
-        buf[4] = 1;
-        WriteUInt16LE(buf, 5, (ushort)(frameId & 0xffff));
-        buf[7] = (byte)(chunkIndex & 0xff);
-        buf[8] = (byte)(chunkCount & 0xff);
-        WriteUInt16LE(buf, 9, (ushort)(startEntityId & 0xffff));
-        WriteUInt16LE(buf, 11, (ushort)(entryCount & 0xffff));
+        WriteLedsChunkHeader(
+            buf,
+            (ushort)(frameId & 0xffff),
+            (byte)(chunkIndex & 0xff),
+            (byte)(chunkCount & 0xff),
+            (ushort)(startEntityId & 0xffff),
+            (ushort)(entryCount & 0xffff));
 
         int offset = LedHeaderSize;
-        foreach (var color in colors)
+        for (int i = 0; i < entryCount; i++)
         {
-            buf[offset] = color.R;
-            buf[offset + 1] = color.G;
-            buf[offset + 2] = color.B;
+            buf[offset] = colors[i].R;
+            buf[offset + 1] = colors[i].G;
+            buf[offset + 2] = colors[i].B;
             offset += LedEntrySize;
         }
 
@@ -103,38 +123,20 @@ public static class StateProtocol
     }
 
     /// <summary>
-    /// Full state : toutes les entités, chunking mur Glassworks si WallMapping est initialisé.
+    /// Full state allouant (tests). Préférer <see cref="LedFrameWriter"/> en Play Mode.
     /// </summary>
     public static List<byte[]> EncodeLedFrame(int frameId, EntityManager entityManager)
     {
-        var chunkDefs = WallMapping.IsInitialized
-            ? new List<LedChunk>(WallMapping.GetAllWallLedChunks())
-            : GetChunksForEntities(entityManager.AllEntityIds);
-        int chunkCount = chunkDefs.Count;
-        var packets = new List<byte[]>(chunkCount);
-
-        for (int chunkIndex = 0; chunkIndex < chunkDefs.Count; chunkIndex++)
+        var writer = new LedFrameWriter();
+        int n = writer.EncodeLeds(frameId, entityManager);
+        var packets = new List<byte[]>(n);
+        for (int i = 0; i < n; i++)
         {
-            var chunk = chunkDefs[chunkIndex];
-            var colors = new Rgb[chunk.EntryCount];
-
-            for (int i = 0; i < chunk.EntryCount; i++)
-            {
-                int entityId = chunk.StartEntityId + i;
-                var state = entityManager.GetColor(entityId);
-                colors[i] = state != null
-                    ? new Rgb { R = state.R, G = state.G, B = state.B }
-                    : Rgb.Black;
-            }
-
-            packets.Add(EncodeLedsChunk(
-                frameId,
-                chunkIndex,
-                chunkCount,
-                chunk.StartEntityId,
-                colors));
+            byte[] src = writer.Packets[i];
+            var copy = new byte[src.Length];
+            Buffer.BlockCopy(src, 0, copy, 0, src.Length);
+            packets.Add(copy);
         }
-
         return packets;
     }
 
@@ -143,16 +145,25 @@ public static class StateProtocol
     /// </summary>
     public static byte[] EncodeDevsPacket(int frameId, DeviceManager deviceManager)
     {
-        if (deviceManager == null)
-            return EncodeDevsPacket(frameId, Array.Empty<DeviceState>());
-
-        return EncodeDevsPacket(frameId, deviceManager.SnapshotAll());
+        int count = deviceManager != null ? DeviceManager.DeviceCount : 0;
+        var buf = new byte[DevsHeaderSize + count * DeviceBlockSize];
+        EncodeDevsPacketInto(buf, frameId, deviceManager);
+        return buf;
     }
 
     public static byte[] EncodeDevsPacket(int frameId, DeviceState[] devices)
     {
         int count = devices != null ? Math.Min(devices.Length, 255) : 0;
         var buf = new byte[DevsHeaderSize + count * DeviceBlockSize];
+        EncodeDevsPacketInto(buf, frameId, devices, count);
+        return buf;
+    }
+
+    public static int EncodeDevsPacketInto(byte[] buf, int frameId, DeviceManager deviceManager)
+    {
+        int count = deviceManager != null ? DeviceManager.DeviceCount : 0;
+        if (buf == null || buf.Length < DevsHeaderSize + count * DeviceBlockSize)
+            throw new ArgumentException("Buffer DEVS trop petit", nameof(buf));
 
         Buffer.BlockCopy(DevsMagic, 0, buf, 0, 4);
         buf[4] = 1;
@@ -162,26 +173,51 @@ public static class StateProtocol
         int offset = DevsHeaderSize;
         for (int i = 0; i < count; i++)
         {
-            var d = devices[i];
-            buf[offset] = d.deviceId;
-            buf[offset + 1] = d.pan;
-            buf[offset + 2] = d.panFine;
-            buf[offset + 3] = d.tilt;
-            buf[offset + 4] = d.tiltFine;
-            buf[offset + 5] = d.dimmer;
-            buf[offset + 6] = d.shutter;
-            buf[offset + 7] = d.colorWheel;
-            buf[offset + 8] = d.r;
-            buf[offset + 9] = d.g;
-            buf[offset + 10] = d.b;
-            buf[offset + 11] = d.w;
-            buf[offset + 12] = d.moveSpeed;
-            buf[offset + 13] = d.function;
-            WriteUInt16LE(buf, offset + 14, 0);
+            var d = deviceManager.GetDevice((byte)i);
+            WriteDeviceBlock(buf, offset, d);
             offset += DeviceBlockSize;
         }
 
-        return buf;
+        return DevsHeaderSize + count * DeviceBlockSize;
+    }
+
+    public static int EncodeDevsPacketInto(byte[] buf, int frameId, DeviceState[] devices, int count)
+    {
+        if (buf == null || buf.Length < DevsHeaderSize + count * DeviceBlockSize)
+            throw new ArgumentException("Buffer DEVS trop petit", nameof(buf));
+
+        Buffer.BlockCopy(DevsMagic, 0, buf, 0, 4);
+        buf[4] = 1;
+        WriteUInt16LE(buf, 5, (ushort)(frameId & 0xffff));
+        buf[7] = (byte)(count & 0xff);
+
+        int offset = DevsHeaderSize;
+        for (int i = 0; i < count; i++)
+        {
+            WriteDeviceBlock(buf, offset, devices[i]);
+            offset += DeviceBlockSize;
+        }
+
+        return DevsHeaderSize + count * DeviceBlockSize;
+    }
+
+    static void WriteDeviceBlock(byte[] buf, int offset, DeviceState d)
+    {
+        buf[offset] = d.deviceId;
+        buf[offset + 1] = d.pan;
+        buf[offset + 2] = d.panFine;
+        buf[offset + 3] = d.tilt;
+        buf[offset + 4] = d.tiltFine;
+        buf[offset + 5] = d.dimmer;
+        buf[offset + 6] = d.shutter;
+        buf[offset + 7] = d.colorWheel;
+        buf[offset + 8] = d.r;
+        buf[offset + 9] = d.g;
+        buf[offset + 10] = d.b;
+        buf[offset + 11] = d.w;
+        buf[offset + 12] = d.moveSpeed;
+        buf[offset + 13] = d.function;
+        WriteUInt16LE(buf, offset + 14, 0);
     }
 
     private static void WriteUInt16LE(byte[] buf, int offset, ushort value)

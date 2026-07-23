@@ -11,8 +11,12 @@ public static class WallMapping
 
     private static WallBandsConfig _config;
     private static List<StateProtocol.LedChunk> _cachedChunks;
+    private static int _layoutVersion;
 
     public static bool IsInitialized => _config?.bands != null && _config.bands.Length > 0;
+
+    /// <summary>Incrémenté à chaque Initialize — LedFrameWriter invalide ses buffers.</summary>
+    public static int LayoutVersion => _layoutVersion;
 
     public static int Columns => _config?.columns ?? 0;
 
@@ -25,6 +29,7 @@ public static class WallMapping
     {
         _config = config;
         _cachedChunks = null;
+        _layoutVersion++;
     }
 
     /// <summary>
