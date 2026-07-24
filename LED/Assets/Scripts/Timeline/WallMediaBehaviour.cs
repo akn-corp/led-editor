@@ -113,6 +113,9 @@ public class WallMediaBehaviour : PlayableBehaviour
                     c.g = Mathf.Lerp(backgroundColor.g, c.g, c.a);
                     c.b = Mathf.Lerp(backgroundColor.b, c.b, c.a);
                     c.a = 1f;
+                    // GIF "transparence" parfois bakée en damier gris très sombre (~5/255)
+                    if (c.r <= 0.09f && c.g <= 0.09f && c.b <= 0.09f)
+                        c = backgroundColor;
                 }
                 _displayPixels[texRow * cols + col] = c;
             }
