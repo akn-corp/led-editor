@@ -32,6 +32,11 @@ public class RippleWaveBehaviour : PlayableBehaviour
 
     public void Apply(EntityManager entityManager, float clipTime, float weight)
     {
+        Apply(entityManager, null, clipTime, weight);
+    }
+
+    public void Apply(EntityManager entityManager, LedWallVisualizer visualizer, float clipTime, float weight)
+    {
         if (entityManager == null || !WallMapping.IsInitialized) return;
 
         int cols = WallMapping.Columns;
@@ -39,8 +44,10 @@ public class RippleWaveBehaviour : PlayableBehaviour
         if (cols <= 1 || rows <= 1) return;
 
         EnsureBuffer(cols, rows);
+        if (visualizer != null)
+            _visualizer = visualizer;
         if (_visualizer == null)
-            _visualizer = Object.FindFirstObjectByType<LedWallVisualizer>();
+            _visualizer = FindLedWallVisualizer();
 
         // Origine en cellules. originY : 0 = bas (row rows-1), 1 = haut (row 0).
         float originCol = originX * (cols - 1);
@@ -125,5 +132,22 @@ public class RippleWaveBehaviour : PlayableBehaviour
         int n = cols * rows;
         if (_displayPixels == null || _displayPixels.Length != n)
             _displayPixels = new Color[n];
+    }
+
+    /// <summary>FindFirstObjectByType ignore souvent LedWall (DontSaveInEditor).</summary>
+    public static LedWallVisualizer FindLedWallVisualizer()
+    {
+        var wall = Object.FindFirstObjectByType<LedWallVisualizer>();
+        if (wall != null) return wall;
+
+        var all = Resources.FindObjectsOfTypeAll<LedWallVisualizer>();
+        for (int i = 0; i < all.Length; i++)
+        {
+            var w = all[i];
+            if (w == null) continue;
+            if (!w.gameObject.scene.IsValid()) continue;
+            return w;
+        }
+        return null;
     }
 }

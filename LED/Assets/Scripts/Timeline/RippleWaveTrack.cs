@@ -1,12 +1,12 @@
 // Piste Timeline — ondes concentriques (ripple néon).
-// Binding : EntityManager. Même architecture que FluidWallTrack / ConvergenceGridTrack.
+// Binding : LedWall (LedWallVisualizer), comme FluidWallTrack.
 
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
 
 [TrackClipType(typeof(RippleWaveClip))]
-[TrackBindingType(typeof(EntityManager))]
+[TrackBindingType(typeof(LedWallVisualizer))]
 [TrackColor(0.15f, 0.85f, 1f)]
 public class RippleWaveTrack : TrackAsset
 {
@@ -20,8 +20,8 @@ public class RippleWaveMixerBehaviour : PlayableBehaviour
 {
     public override void ProcessFrame(Playable playable, FrameData info, object playerData)
     {
-        var entityManager = playerData as EntityManager;
-        if (entityManager == null) return;
+        var wall = playerData as LedWallVisualizer;
+        if (wall == null || !wall.IsBuilt || wall.EntityManager == null) return;
 
         RippleWaveBehaviour best = null;
         Playable bestPlayable = default;
@@ -46,6 +46,6 @@ public class RippleWaveMixerBehaviour : PlayableBehaviour
         }
 
         if (best != null)
-            best.Apply(entityManager, (float)bestPlayable.GetTime(), bestWeight);
+            best.Apply(wall.EntityManager, wall, (float)bestPlayable.GetTime(), bestWeight);
     }
 }

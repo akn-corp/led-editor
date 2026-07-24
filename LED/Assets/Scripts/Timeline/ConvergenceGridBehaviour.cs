@@ -35,6 +35,11 @@ public class ConvergenceGridBehaviour : PlayableBehaviour
 
     public void Apply(EntityManager entityManager, float clipTime, float duration)
     {
+        Apply(entityManager, null, clipTime, duration);
+    }
+
+    public void Apply(EntityManager entityManager, LedWallVisualizer visualizer, float clipTime, float duration)
+    {
         if (entityManager == null || !WallMapping.IsInitialized) return;
 
         int cols = WallMapping.Columns;
@@ -42,8 +47,10 @@ public class ConvergenceGridBehaviour : PlayableBehaviour
         if (cols <= 1 || rows <= 1) return;
 
         EnsureBuffer(cols, rows);
+        if (visualizer != null)
+            _visualizer = visualizer;
         if (_visualizer == null)
-            _visualizer = Object.FindFirstObjectByType<LedWallVisualizer>();
+            _visualizer = RippleWaveBehaviour.FindLedWallVisualizer();
 
         // --- Découpage temporel des 3 phases ---
         float total = duration > 0.0001f ? duration : (clipDuration > 0.0001f ? clipDuration : 1f);

@@ -60,3 +60,5 @@
 
 # Keep Unity source code, scenes and meta files tracked
 # (no rule here to ignore LED/Assets/**, LED/Packages/**, LED/ProjectSettings/**, etc.)
+
+.superpowers/

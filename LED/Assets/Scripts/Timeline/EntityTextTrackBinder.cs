@@ -1,6 +1,7 @@
 // Relie les pistes Timeline :
-//   Mur (texte / fluid / paloma / media / wall effect) → composants sur LedWall / EntityManager
+//   Mur (texte / fluid / paloma / media / wall effect / ripple / convergence) → LedWall
 //   Devices (lyres / projecteur) → DeviceManager
+//   EntityColor (optionnel) → EntityManager
 
 using UnityEngine;
 using UnityEngine.Playables;
@@ -41,22 +42,16 @@ public static class EntityTextTrackBinder
 
         var wall = painter != null ? painter.GetComponent<LedWallVisualizer>() : null;
         if (wall == null)
-            wall = Object.FindFirstObjectByType<LedWallVisualizer>();
+            wall = RippleWaveBehaviour.FindLedWallVisualizer();
 
         // Edit Mode : LedWall est DontSave — récupère via un binding déjà posé
         if (wall == null)
         {
             foreach (var track in timeline.GetOutputTracks())
             {
-                if (track is FluidWallTrack || track is PalomaRumbaTrack || track is WallMediaTrack
-                    || track is RippleWaveTrack || track is ConvergenceGridTrack
-                    || track is WallEffectTrack)
-                {
-                    wall = director.GetGenericBinding(track) as LedWallVisualizer;
-                    if (wall != null) break;
-                    if (director.GetGenericBinding(track) is EntityManager)
-                        break;
-                }
+                if (!IsLedWallTrack(track)) continue;
+                wall = director.GetGenericBinding(track) as LedWallVisualizer;
+                if (wall != null) break;
             }
         }
         if (wall == null)
@@ -84,19 +79,12 @@ public static class EntityTextTrackBinder
             }
             else if (track is EntityTextTrack && painter == null)
             {
-                // Garde le binding existant si painter non résolu
                 if (director.GetGenericBinding(track) != null)
                     wallBound++;
             }
-            else if ((track is FluidWallTrack || track is PalomaRumbaTrack || track is WallMediaTrack) && wall != null)
+            else if (IsLedWallTrack(track) && wall != null)
             {
                 director.SetGenericBinding(track, wall);
-                wallBound++;
-            }
-            else if ((track is RippleWaveTrack || track is ConvergenceGridTrack || track is WallEffectTrack)
-                     && entityManager != null)
-            {
-                director.SetGenericBinding(track, entityManager);
                 wallBound++;
             }
             else if (track is DeviceTrack && deviceManager != null)
@@ -130,6 +118,16 @@ public static class EntityTextTrackBinder
             director.Play();
 
         Debug.Log($"[TimelineBinder] wall={wallBound}, entityColor={entityBound}, device={deviceBound} @ t={t:F2}s");
+    }
+
+    static bool IsLedWallTrack(TrackAsset track)
+    {
+        return track is FluidWallTrack
+            || track is PalomaRumbaTrack
+            || track is WallMediaTrack
+            || track is RippleWaveTrack
+            || track is ConvergenceGridTrack
+            || track is WallEffectTrack;
     }
 
     /// <summary>
@@ -181,9 +179,10 @@ public static class EntityTextTrackBinder
     }
 
     /// <summary>
-    /// Pilote le mur depuis Wall Media (Edit Preview Timeline).
+    /// Pilote le mur depuis toutes les pistes mur (Edit Preview Timeline).
+    /// Les mixers Playable ne sont pas fiables hors Play Mode.
     /// </summary>
-    public static bool DriveWallMediaFromTimeline(PlayableDirector director, LedWallVisualizer wall)
+    public static bool DriveWallFromTimeline(PlayableDirector director, LedWallVisualizer wall)
     {
         if (director == null) return false;
 
@@ -207,39 +206,115 @@ public static class EntityTextTrackBinder
         var timeline = director.playableAsset as TimelineAsset;
         if (timeline == null) return false;
 
+        // Rebind LedWall (DontSave) à chaque scrub
+        foreach (var track in timeline.GetOutputTracks())
+        {
+            if (IsLedWallTrack(track))
+                director.SetGenericBinding(track, wall);
+        }
+
         double time = director.time;
         bool any = false;
 
         foreach (var track in timeline.GetOutputTracks())
         {
-            if (track is not WallMediaTrack mediaTrack) continue;
-            if (mediaTrack.muted) continue;
+            if (track.muted) continue;
 
-            director.SetGenericBinding(mediaTrack, wall);
-
-            foreach (var clip in mediaTrack.GetClips())
+            foreach (var clip in track.GetClips())
             {
                 if (time < clip.start || time >= clip.start + clip.duration)
                     continue;
 
-                if (clip.asset is not WallMediaClip mediaClip) continue;
-
                 float localTime = (float)((time - clip.start) * clip.timeScale + clip.clipIn);
-                var behaviour = new WallMediaBehaviour
+
+                if (clip.asset is WallMediaClip mediaClip)
                 {
-                    sequence = mediaClip.sequence,
-                    framesOverride = mediaClip.framesOverride,
-                    framesPerSecond = mediaClip.framesPerSecond,
-                    loop = mediaClip.loop,
-                    sampleFilter = mediaClip.sampleFilter,
-                    brightness = mediaClip.brightness,
-                    backgroundColor = mediaClip.backgroundColor,
-                };
-                behaviour.Apply(wall.EntityManager, wall, localTime);
-                any = true;
+                    var behaviour = new WallMediaBehaviour
+                    {
+                        sequence = mediaClip.sequence,
+                        framesOverride = mediaClip.framesOverride,
+                        framesPerSecond = mediaClip.framesPerSecond,
+                        loop = mediaClip.loop,
+                        sampleFilter = mediaClip.sampleFilter,
+                        brightness = mediaClip.brightness,
+                        backgroundColor = mediaClip.backgroundColor,
+                    };
+                    behaviour.Apply(wall.EntityManager, wall, localTime);
+                    any = true;
+                }
+                else if (clip.asset is RippleWaveClip rippleClip)
+                {
+                    var b = new RippleWaveBehaviour
+                    {
+                        originX = rippleClip.originX,
+                        originY = rippleClip.originY,
+                        wavelengthCells = rippleClip.wavelengthCells,
+                        wavesPerSecond = rippleClip.wavesPerSecond,
+                        lineWidthCells = rippleClip.lineWidthCells,
+                        haloCells = rippleClip.haloCells,
+                        haloStrength = rippleClip.haloStrength,
+                        edgeNoiseCells = rippleClip.edgeNoiseCells,
+                        distanceFade = rippleClip.distanceFade,
+                        glowIntensity = rippleClip.glowIntensity,
+                        tint = rippleClip.tint,
+                    };
+                    b.Apply(wall.EntityManager, wall, localTime, 1f);
+                    any = true;
+                }
+                else if (clip.asset is FluidWallClip fluidClip)
+                {
+                    var b = new FluidWallBehaviour
+                    {
+                        speed = fluidClip.speed,
+                        waveScale = fluidClip.waveScale,
+                        glowIntensity = fluidClip.glowIntensity,
+                    };
+                    b.Apply(wall.EntityManager, wall, localTime);
+                    any = true;
+                }
+                else if (clip.asset is ConvergenceGridClip gridClip)
+                {
+                    var b = new ConvergenceGridBehaviour
+                    {
+                        phase1Weight = gridClip.phase1Weight,
+                        phase2Weight = gridClip.phase2Weight,
+                        phase3Weight = gridClip.phase3Weight,
+                        squareColumns = Mathf.Max(1, gridClip.squareColumns),
+                        lineThicknessCells = gridClip.lineThicknessCells,
+                        squareFillRatio = gridClip.squareFillRatio,
+                        glowIntensity = gridClip.glowIntensity,
+                        tint = gridClip.tint,
+                        clipDuration = (float)clip.duration,
+                    };
+                    b.Apply(wall.EntityManager, wall, localTime, (float)clip.duration);
+                    any = true;
+                }
+                else if (clip.asset is PalomaRumbaTextClip palomaClip)
+                {
+                    var b = new PalomaRumbaTextBehaviour
+                    {
+                        bpm = palomaClip.bpm,
+                        maxSpeed = palomaClip.maxSpeed,
+                        goldColor = palomaClip.goldColor,
+                        redColor = palomaClip.redColor,
+                        fontType = palomaClip.fontType,
+                        bandHeight = palomaClip.bandHeight,
+                    };
+                    b.Apply(wall.EntityManager, wall, localTime, (float)clip.duration);
+                    any = true;
+                }
+                else if (clip.asset is WallEffectClip effectClip)
+                {
+                    effectClip.ApplyToWall(wall, localTime);
+                    any = true;
+                }
             }
         }
 
         return any;
     }
+
+    /// <summary>Compat : alias de DriveWallFromTimeline.</summary>
+    public static bool DriveWallMediaFromTimeline(PlayableDirector director, LedWallVisualizer wall)
+        => DriveWallFromTimeline(director, wall);
 }

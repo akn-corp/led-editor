@@ -22,7 +22,7 @@ public class WallMediaBehaviour : PlayableBehaviour
     {
         if (entityManager == null || !WallMapping.IsInitialized) return;
         if (visualizer == null)
-            visualizer = Object.FindFirstObjectByType<LedWallVisualizer>();
+            visualizer = RippleWaveBehaviour.FindLedWallVisualizer();
         if (visualizer == null) return;
 
         Texture2D frame = ResolveFrame(clipTime);
