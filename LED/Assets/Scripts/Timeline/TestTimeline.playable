@@ -1,5 +1,37 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-9114297557411623191
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfdb79428ecc4d28bf25d320605caa21, type: 3}
+  m_Name: Dev_Show(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::DeviceShowClip
+  enableProjector: 1
+  projectorDimmer: 255
+  projectorShutter: 255
+  projectorR: 255
+  projectorG: 255
+  projectorB: 255
+  projectorW: 65
+  projectorBlink: 1
+  projectorBlinkHz: 0.61
+  enableLyres: 1
+  lyreDimmer: 255
+  lyreShutter: 255
+  lyreColorWheel: 255
+  lyreColorWheels: 7e0000007f0000007f0000007f000000
+  lyreR: 255
+  autoSweep: 1
+  sweepSpeed: 1.8
+  sweepAmplitudePan: 1
+  sweepAmplitudeTilt: 0
+  moveSpeed: 255
 --- !u!114 &-9000000000000000092
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -56,6 +88,25 @@ MonoBehaviour:
   palomaSpeed: 0
   rumbaSpeed: 0
   rowPhase: 0.35
+--- !u!114 &-9000000000000000090
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdb37325ad4f4fa69722c974e1314e21, type: 3}
+  m_Name: fire
+  m_EditorClassIdentifier: Assembly-CSharp::WallMediaClip
+  sequence: {fileID: 11400000, guid: e3666c3f46364d9e90262c46b46ba781, type: 2}
+  framesOverride: []
+  framesPerSecond: 10
+  loop: 1
+  sampleFilter: 1
+  brightness: 1
+  backgroundColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!114 &-9000000000000000082
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -654,6 +705,57 @@ MonoBehaviour:
   sweepAmplitudePan: 110
   sweepAmplitudeTilt: 0
   moveSpeed: 128
+--- !u!114 &-8393934068935979049
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdb37325ad4f4fa69722c974e1314e21, type: 3}
+  m_Name: fire(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::WallMediaClip
+  sequence: {fileID: 11400000, guid: e3666c3f46364d9e90262c46b46ba781, type: 2}
+  framesOverride: []
+  framesPerSecond: 10
+  loop: 1
+  sampleFilter: 1
+  brightness: 1
+  backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+--- !u!114 &-8333914895027521597
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfdb79428ecc4d28bf25d320605caa21, type: 3}
+  m_Name: Dev_Show(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::DeviceShowClip
+  enableProjector: 1
+  projectorDimmer: 255
+  projectorShutter: 255
+  projectorR: 255
+  projectorG: 255
+  projectorB: 255
+  projectorW: 65
+  projectorBlink: 1
+  projectorBlinkHz: 0.61
+  enableLyres: 1
+  lyreDimmer: 255
+  lyreShutter: 255
+  lyreColorWheel: 255
+  lyreColorWheels: 7e0000007f0000007f0000007f000000
+  lyreR: 255
+  autoSweep: 1
+  sweepSpeed: 1.8
+  sweepAmplitudePan: 1
+  sweepAmplitudeTilt: 0
+  moveSpeed: 255
 --- !u!114 &-8151084890158031626
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -709,10 +811,10 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: smile
   - m_Version: 1
-    m_Start: 11.22758883134462
+    m_Start: 11.619969575908035
     m_ClipIn: 0
     m_Asset: {fileID: -9000000000000000081}
-    m_Duration: 1.214738627811892
+    m_Duration: 0.8223578832484773
     m_TimeScale: 1
     m_ParentTrack: {fileID: -8151084890158031626}
     m_EaseInDuration: 0
@@ -906,6 +1008,105 @@ MonoBehaviour:
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
     m_DisplayName: danse2
+  - m_Version: 1
+    m_Start: 18.815637868428603
+    m_ClipIn: 0
+    m_Asset: {fileID: -9000000000000000090}
+    m_Duration: 0.3643621315713972
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -8151084890158031626}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: fire
+  - m_Version: 1
+    m_Start: 44.475637868428606
+    m_ClipIn: 0
+    m_Asset: {fileID: -8393934068935979049}
+    m_Duration: 0.3643621315713972
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -8151084890158031626}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: fire
+  - m_Version: 1
+    m_Start: 45.46
+    m_ClipIn: 0
+    m_Asset: {fileID: -4098638295746979184}
+    m_Duration: 1.9200000000000017
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -8151084890158031626}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: danse2
   m_Markers:
     m_Objects: []
 --- !u!114 &-8000000000000000020
@@ -1029,7 +1230,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Projecteur + 4 Lyres
   - m_Version: 1
-    m_Start: 7.98
+    m_Start: 26.8
     m_ClipIn: 0
     m_Asset: {fileID: -1370883702908489885}
     m_Duration: 5.5
@@ -1066,303 +1267,6 @@ MonoBehaviour:
     m_ClipIn: 0
     m_Asset: {fileID: 7816448546078088606}
     m_Duration: 1.0071553707681598
-    m_TimeScale: 1
-    m_ParentTrack: {fileID: -8000000000000000020}
-    m_EaseInDuration: 0
-    m_EaseOutDuration: 0
-    m_BlendInDuration: -1
-    m_BlendOutDuration: -1
-    m_MixInCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_MixOutCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_BlendInCurveMode: 0
-    m_BlendOutCurveMode: 0
-    m_ExposedParameterNames: []
-    m_AnimationCurves: {fileID: 0}
-    m_Recordable: 0
-    m_PostExtrapolationMode: 0
-    m_PreExtrapolationMode: 0
-    m_PostExtrapolationTime: 0
-    m_PreExtrapolationTime: 0
-    m_DisplayName: Projecteur + 4 Lyres
-  - m_Version: 1
-    m_Start: 2.6
-    m_ClipIn: 0
-    m_Asset: {fileID: -6876669740529670880}
-    m_Duration: 0.1599999999999997
-    m_TimeScale: 1
-    m_ParentTrack: {fileID: -8000000000000000020}
-    m_EaseInDuration: 0
-    m_EaseOutDuration: 0
-    m_BlendInDuration: -1
-    m_BlendOutDuration: -1
-    m_MixInCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_MixOutCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_BlendInCurveMode: 0
-    m_BlendOutCurveMode: 0
-    m_ExposedParameterNames: []
-    m_AnimationCurves: {fileID: 0}
-    m_Recordable: 0
-    m_PostExtrapolationMode: 0
-    m_PreExtrapolationMode: 0
-    m_PostExtrapolationTime: 0
-    m_PreExtrapolationTime: 0
-    m_DisplayName: Projecteur + 4 Lyres
-  - m_Version: 1
-    m_Start: 2.96
-    m_ClipIn: 0
-    m_Asset: {fileID: -1515838776832257848}
-    m_Duration: 0.16000000000000014
-    m_TimeScale: 1
-    m_ParentTrack: {fileID: -8000000000000000020}
-    m_EaseInDuration: 0
-    m_EaseOutDuration: 0
-    m_BlendInDuration: -1
-    m_BlendOutDuration: -1
-    m_MixInCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_MixOutCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_BlendInCurveMode: 0
-    m_BlendOutCurveMode: 0
-    m_ExposedParameterNames: []
-    m_AnimationCurves: {fileID: 0}
-    m_Recordable: 0
-    m_PostExtrapolationMode: 0
-    m_PreExtrapolationMode: 0
-    m_PostExtrapolationTime: 0
-    m_PreExtrapolationTime: 0
-    m_DisplayName: Projecteur + 4 Lyres
-  - m_Version: 1
-    m_Start: 4.08
-    m_ClipIn: 0
-    m_Asset: {fileID: 3046273409431200093}
-    m_Duration: 0.26000000000000023
-    m_TimeScale: 1
-    m_ParentTrack: {fileID: -8000000000000000020}
-    m_EaseInDuration: 0
-    m_EaseOutDuration: 0
-    m_BlendInDuration: -1
-    m_BlendOutDuration: -1
-    m_MixInCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_MixOutCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_BlendInCurveMode: 0
-    m_BlendOutCurveMode: 0
-    m_ExposedParameterNames: []
-    m_AnimationCurves: {fileID: 0}
-    m_Recordable: 0
-    m_PostExtrapolationMode: 0
-    m_PreExtrapolationMode: 0
-    m_PostExtrapolationTime: 0
-    m_PreExtrapolationTime: 0
-    m_DisplayName: Projecteur + 4 Lyres
-  - m_Version: 1
-    m_Start: 3.38
-    m_ClipIn: 0
-    m_Asset: {fileID: 3745260271933281013}
-    m_Duration: 0.16000000000000014
-    m_TimeScale: 1
-    m_ParentTrack: {fileID: -8000000000000000020}
-    m_EaseInDuration: 0
-    m_EaseOutDuration: 0
-    m_BlendInDuration: -1
-    m_BlendOutDuration: -1
-    m_MixInCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_MixOutCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_BlendInCurveMode: 0
-    m_BlendOutCurveMode: 0
-    m_ExposedParameterNames: []
-    m_AnimationCurves: {fileID: 0}
-    m_Recordable: 0
-    m_PostExtrapolationMode: 0
-    m_PreExtrapolationMode: 0
-    m_PostExtrapolationTime: 0
-    m_PreExtrapolationTime: 0
-    m_DisplayName: Projecteur + 4 Lyres
-  - m_Version: 1
-    m_Start: 3.66
-    m_ClipIn: 0
-    m_Asset: {fileID: 6709881332715320906}
-    m_Duration: 0.16000000000000014
-    m_TimeScale: 1
-    m_ParentTrack: {fileID: -8000000000000000020}
-    m_EaseInDuration: 0
-    m_EaseOutDuration: 0
-    m_BlendInDuration: -1
-    m_BlendOutDuration: -1
-    m_MixInCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_MixOutCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_BlendInCurveMode: 0
-    m_BlendOutCurveMode: 0
-    m_ExposedParameterNames: []
-    m_AnimationCurves: {fileID: 0}
-    m_Recordable: 0
-    m_PostExtrapolationMode: 0
-    m_PreExtrapolationMode: 0
-    m_PostExtrapolationTime: 0
-    m_PreExtrapolationTime: 0
-    m_DisplayName: Projecteur + 4 Lyres
-  - m_Version: 1
-    m_Start: 4.54
-    m_ClipIn: 0
-    m_Asset: {fileID: -2170169897642317158}
-    m_Duration: 0.16000000000000014
-    m_TimeScale: 1
-    m_ParentTrack: {fileID: -8000000000000000020}
-    m_EaseInDuration: 0
-    m_EaseOutDuration: 0
-    m_BlendInDuration: -1
-    m_BlendOutDuration: -1
-    m_MixInCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_MixOutCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_BlendInCurveMode: 0
-    m_BlendOutCurveMode: 0
-    m_ExposedParameterNames: []
-    m_AnimationCurves: {fileID: 0}
-    m_Recordable: 0
-    m_PostExtrapolationMode: 0
-    m_PreExtrapolationMode: 0
-    m_PostExtrapolationTime: 0
-    m_PreExtrapolationTime: 0
-    m_DisplayName: Projecteur + 4 Lyres
-  - m_Version: 1
-    m_Start: 5.06
-    m_ClipIn: 0
-    m_Asset: {fileID: 8072930426636809543}
-    m_Duration: 0.16000000000000014
-    m_TimeScale: 1
-    m_ParentTrack: {fileID: -8000000000000000020}
-    m_EaseInDuration: 0
-    m_EaseOutDuration: 0
-    m_BlendInDuration: -1
-    m_BlendOutDuration: -1
-    m_MixInCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_MixOutCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_BlendInCurveMode: 0
-    m_BlendOutCurveMode: 0
-    m_ExposedParameterNames: []
-    m_AnimationCurves: {fileID: 0}
-    m_Recordable: 0
-    m_PostExtrapolationMode: 0
-    m_PreExtrapolationMode: 0
-    m_PostExtrapolationTime: 0
-    m_PreExtrapolationTime: 0
-    m_DisplayName: Projecteur + 4 Lyres
-  - m_Version: 1
-    m_Start: 5.68
-    m_ClipIn: 0
-    m_Asset: {fileID: 4151701013036742068}
-    m_Duration: 0.1800000000000006
-    m_TimeScale: 1
-    m_ParentTrack: {fileID: -8000000000000000020}
-    m_EaseInDuration: 0
-    m_EaseOutDuration: 0
-    m_BlendInDuration: -1
-    m_BlendOutDuration: -1
-    m_MixInCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_MixOutCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_BlendInCurveMode: 0
-    m_BlendOutCurveMode: 0
-    m_ExposedParameterNames: []
-    m_AnimationCurves: {fileID: 0}
-    m_Recordable: 0
-    m_PostExtrapolationMode: 0
-    m_PreExtrapolationMode: 0
-    m_PostExtrapolationTime: 0
-    m_PreExtrapolationTime: 0
-    m_DisplayName: Projecteur + 4 Lyres
-  - m_Version: 1
-    m_Start: 6.08
-    m_ClipIn: 0
-    m_Asset: {fileID: -4959102743372300516}
-    m_Duration: 0.1800000000000006
     m_TimeScale: 1
     m_ParentTrack: {fileID: -8000000000000000020}
     m_EaseInDuration: 0
@@ -1429,6 +1333,534 @@ MonoBehaviour:
     m_ClipIn: 0
     m_Asset: {fileID: 8370669994719632500}
     m_Duration: 0.03999999999999998
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -8000000000000000020}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: Projecteur + 4 Lyres
+  - m_Version: 1
+    m_Start: 2.6
+    m_ClipIn: 0
+    m_Asset: {fileID: 3519555900364353953}
+    m_Duration: 0.03999999999999998
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -8000000000000000020}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: Projecteur + 4 Lyres
+  - m_Version: 1
+    m_Start: 2.96
+    m_ClipIn: 0
+    m_Asset: {fileID: 6034635234654735200}
+    m_Duration: 0.03999999999999998
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -8000000000000000020}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: Projecteur + 4 Lyres
+  - m_Version: 1
+    m_Start: 3.38
+    m_ClipIn: 0
+    m_Asset: {fileID: 4353830566147865592}
+    m_Duration: 0.03999999999999998
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -8000000000000000020}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: Projecteur + 4 Lyres
+  - m_Version: 1
+    m_Start: 3.66
+    m_ClipIn: 0
+    m_Asset: {fileID: -3440533428988639762}
+    m_Duration: 0.03999999999999998
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -8000000000000000020}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: Projecteur + 4 Lyres
+  - m_Version: 1
+    m_Start: 4.1
+    m_ClipIn: 0
+    m_Asset: {fileID: 7786079239331889484}
+    m_Duration: 0.03999999999999998
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -8000000000000000020}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: Projecteur + 4 Lyres
+  - m_Version: 1
+    m_Start: 4.52
+    m_ClipIn: 0
+    m_Asset: {fileID: 5055542704741564071}
+    m_Duration: 0.03999999999999998
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -8000000000000000020}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: Projecteur + 4 Lyres
+  - m_Version: 1
+    m_Start: 4.92
+    m_ClipIn: 0
+    m_Asset: {fileID: 990725115177795370}
+    m_Duration: 0.03999999999999998
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -8000000000000000020}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: Projecteur + 4 Lyres
+  - m_Version: 1
+    m_Start: 5.68
+    m_ClipIn: 0
+    m_Asset: {fileID: 3273958388332340809}
+    m_Duration: 0.20000000000000018
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -8000000000000000020}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: Projecteur + 4 Lyres
+  - m_Version: 1
+    m_Start: 6.08
+    m_ClipIn: 0
+    m_Asset: {fileID: -1245027337321584213}
+    m_Duration: 0.20000000000000018
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -8000000000000000020}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: Projecteur + 4 Lyres
+  - m_Version: 1
+    m_Start: 9.54
+    m_ClipIn: 0
+    m_Asset: {fileID: 3798883095339920303}
+    m_Duration: 0.03999999999999998
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -8000000000000000020}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: Projecteur + 4 Lyres
+  - m_Version: 1
+    m_Start: 10.14
+    m_ClipIn: 0
+    m_Asset: {fileID: 5536205116779313838}
+    m_Duration: 0.03999999999999998
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -8000000000000000020}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: Projecteur + 4 Lyres
+  - m_Version: 1
+    m_Start: 10.68
+    m_ClipIn: 0
+    m_Asset: {fileID: -9114297557411623191}
+    m_Duration: 0.03999999999999998
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -8000000000000000020}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: Projecteur + 4 Lyres
+  - m_Version: 1
+    m_Start: 10.28
+    m_ClipIn: 0
+    m_Asset: {fileID: 754443292726209505}
+    m_Duration: 0.03999999999999998
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -8000000000000000020}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: Projecteur + 4 Lyres
+  - m_Version: 1
+    m_Start: 10.52
+    m_ClipIn: 0
+    m_Asset: {fileID: -3730385520772679049}
+    m_Duration: 0.03999999999999998
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -8000000000000000020}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: Projecteur + 4 Lyres
+  - m_Version: 1
+    m_Start: 11.12
+    m_ClipIn: 0
+    m_Asset: {fileID: 1247717482026316467}
+    m_Duration: 0.49996957590803603
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -8000000000000000020}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: Projecteur + 4 Lyres
+  - m_Version: 1
+    m_Start: 12.8
+    m_ClipIn: 0
+    m_Asset: {fileID: -8333914895027521597}
+    m_Duration: 0.5753054192010314
     m_TimeScale: 1
     m_ParentTrack: {fileID: -8000000000000000020}
     m_EaseInDuration: 0
@@ -1698,7 +2130,7 @@ MonoBehaviour:
     m_Start: 2.52
     m_ClipIn: 0
     m_Asset: {fileID: -9000000000000000005}
-    m_Duration: 0.7200000000000002
+    m_Duration: 0.33999999999999986
     m_TimeScale: 1
     m_ParentTrack: {fileID: -8000000000000000001}
     m_EaseInDuration: 0
@@ -1728,10 +2160,10 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: numbers
   - m_Version: 1
-    m_Start: 3.3963414194621144
+    m_Start: 3.38
     m_ClipIn: 0
     m_Asset: {fileID: -9000000000000000006}
-    m_Duration: 0.525934417741373
+    m_Duration: 0.2400000000000002
     m_TimeScale: 1
     m_ParentTrack: {fileID: -8000000000000000001}
     m_EaseInDuration: 0
@@ -1740,16 +2172,10 @@ MonoBehaviour:
     m_BlendOutDuration: -1
     m_MixInCurve:
       serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_MixOutCurve:
-      serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 1
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -1758,13 +2184,19 @@ MonoBehaviour:
         outWeight: 0
       - serializedVersion: 3
         time: 1
-        value: 0
+        value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 0
         weightedMode: 0
         inWeight: 0
         outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -1848,7 +2280,7 @@ MonoBehaviour:
     m_Start: 4.52
     m_ClipIn: 0
     m_Asset: {fileID: 6381748357973104292}
-    m_Duration: 0.4188476288877432
+    m_Duration: 0.39898541111499064
     m_TimeScale: 1
     m_ParentTrack: {fileID: -8000000000000000001}
     m_EaseInDuration: 0
@@ -1896,7 +2328,25 @@ MonoBehaviour:
       m_RotationOrder: 4
     m_MixOutCurve:
       serializedVersion: 2
-      m_Curve: []
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -1923,7 +2373,25 @@ MonoBehaviour:
     m_BlendOutDuration: -1
     m_MixInCurve:
       serializedVersion: 2
-      m_Curve: []
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -1947,13 +2415,13 @@ MonoBehaviour:
     m_Start: 17.98
     m_ClipIn: 0
     m_Asset: {fileID: 7587769631854881403}
-    m_Duration: 1
+    m_Duration: 0.8356378684286021
     m_TimeScale: 1
     m_ParentTrack: {fileID: -8000000000000000001}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
     m_BlendInDuration: -1
-    m_BlendOutDuration: 0.09999999999999787
+    m_BlendOutDuration: -1
     m_MixInCurve:
       serializedVersion: 2
       m_Curve: []
@@ -1977,15 +2445,15 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: all day long
   - m_Version: 1
-    m_Start: 18.880000000000003
+    m_Start: 19.18
     m_ClipIn: 0
     m_Asset: {fileID: 2883655057565272010}
-    m_Duration: 1
+    m_Duration: 0.6600000000000001
     m_TimeScale: 1
     m_ParentTrack: {fileID: -8000000000000000001}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: 0.09999999999999787
+    m_BlendInDuration: -1
     m_BlendOutDuration: -1
     m_MixInCurve:
       serializedVersion: 2
@@ -2259,10 +2727,10 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: I don't
   - m_Version: 1
-    m_Start: 4.98
+    m_Start: 4.91898541111499
     m_ClipIn: 0
     m_Asset: {fileID: -5506639635625194196}
-    m_Duration: 0.4806384140066804
+    m_Duration: 0.5416530028916906
     m_TimeScale: 1
     m_ParentTrack: {fileID: -8000000000000000001}
     m_EaseInDuration: 0
@@ -2394,108 +2862,6 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: all day long
   - m_Version: 1
-    m_Start: 43.62
-    m_ClipIn: 0
-    m_Asset: {fileID: -2064528847012223631}
-    m_Duration: 1
-    m_TimeScale: 1
-    m_ParentTrack: {fileID: -8000000000000000001}
-    m_EaseInDuration: 0
-    m_EaseOutDuration: 0
-    m_BlendInDuration: -1
-    m_BlendOutDuration: 0.10000000000000142
-    m_MixInCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_MixOutCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_BlendInCurveMode: 0
-    m_BlendOutCurveMode: 0
-    m_ExposedParameterNames: []
-    m_AnimationCurves: {fileID: 0}
-    m_Recordable: 0
-    m_PostExtrapolationMode: 0
-    m_PreExtrapolationMode: 0
-    m_PostExtrapolationTime: 0
-    m_PreExtrapolationTime: 0
-    m_DisplayName: all day long
-  - m_Version: 1
-    m_Start: 44.519999999999996
-    m_ClipIn: 0
-    m_Asset: {fileID: 4204391606610244809}
-    m_Duration: 1
-    m_TimeScale: 1
-    m_ParentTrack: {fileID: -8000000000000000001}
-    m_EaseInDuration: 0
-    m_EaseOutDuration: 0
-    m_BlendInDuration: 0.10000000000000142
-    m_BlendOutDuration: -1
-    m_MixInCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_MixOutCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_BlendInCurveMode: 0
-    m_BlendOutCurveMode: 0
-    m_ExposedParameterNames: []
-    m_AnimationCurves: {fileID: 0}
-    m_Recordable: 0
-    m_PostExtrapolationMode: 0
-    m_PreExtrapolationMode: 0
-    m_PostExtrapolationTime: 0
-    m_PreExtrapolationTime: 0
-    m_DisplayName: all day long
-  - m_Version: 1
     m_Start: 38.652839875435454
     m_ClipIn: 0
     m_Asset: {fileID: 172927840900153092}
@@ -2548,6 +2914,174 @@ MonoBehaviour:
     m_MixOutCurve:
       serializedVersion: 2
       m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: all day long
+  - m_Version: 1
+    m_Start: 43.64
+    m_ClipIn: 0
+    m_Asset: {fileID: -4369953137612062953}
+    m_Duration: 0.8356378684286021
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -8000000000000000001}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: all day long
+  - m_Version: 1
+    m_Start: 44.84
+    m_ClipIn: 0
+    m_Asset: {fileID: 5699822407170653780}
+    m_Duration: 0.6600000000000001
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -8000000000000000001}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: all day long
+  - m_Version: 1
+    m_Start: 2.9436585805378854
+    m_ClipIn: 0
+    m_Asset: {fileID: 7415604464470027008}
+    m_Duration: 0.43634141946211447
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -8000000000000000001}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: numbers
+  - m_Version: 1
+    m_Start: 3.66
+    m_ClipIn: 0
+    m_Asset: {fileID: 4052800342335349625}
+    m_Duration: 0.35999999999999943
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: -8000000000000000001}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -2759,6 +3293,120 @@ MonoBehaviour:
   speed: 2.23
   waveScale: 6
   glowIntensity: 1.8
+--- !u!114 &-4369953137612062953
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4db28910b03fe4e06b00d98193749e8b, type: 3}
+  m_Name: Text_AllDayLong(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::EntityTextClip
+  text: DELETE MY NUMBER
+  color: {r: 0.35, g: 0.95, b: 0.2, a: 1}
+  backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+  position: {x: 0.5, y: 0.5}
+  size: 0.16
+  fadeIn: 0.05
+  fadeOut: 0.2
+  easeIn: 5
+  easeOut: 4
+  fitToWall: 1
+  entrance: 5
+  pixelScale: 2
+  hitFlash: 1
+  onStart:
+    m_PersistentCalls:
+      m_Calls: []
+  onEnd:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &-4098638295746979184
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdb37325ad4f4fa69722c974e1314e21, type: 3}
+  m_Name: danse2(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::WallMediaClip
+  sequence: {fileID: 11400000, guid: 20fd8c399ad140e2ae8dd7ad097c324a, type: 2}
+  framesOverride: []
+  framesPerSecond: 15
+  loop: 1
+  sampleFilter: 1
+  brightness: 1
+  backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+--- !u!114 &-3730385520772679049
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfdb79428ecc4d28bf25d320605caa21, type: 3}
+  m_Name: Dev_Show(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::DeviceShowClip
+  enableProjector: 1
+  projectorDimmer: 255
+  projectorShutter: 255
+  projectorR: 255
+  projectorG: 255
+  projectorB: 255
+  projectorW: 65
+  projectorBlink: 1
+  projectorBlinkHz: 0.61
+  enableLyres: 1
+  lyreDimmer: 255
+  lyreShutter: 255
+  lyreColorWheel: 255
+  lyreColorWheels: 7e0000007f0000007f0000007f000000
+  lyreR: 255
+  autoSweep: 1
+  sweepSpeed: 1.8
+  sweepAmplitudePan: 1
+  sweepAmplitudeTilt: 0
+  moveSpeed: 255
+--- !u!114 &-3440533428988639762
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfdb79428ecc4d28bf25d320605caa21, type: 3}
+  m_Name: Dev_Show(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::DeviceShowClip
+  enableProjector: 1
+  projectorDimmer: 255
+  projectorShutter: 255
+  projectorR: 255
+  projectorG: 255
+  projectorB: 255
+  projectorW: 65
+  projectorBlink: 1
+  projectorBlinkHz: 0.61
+  enableLyres: 1
+  lyreDimmer: 255
+  lyreShutter: 255
+  lyreColorWheel: 255
+  lyreColorWheels: 7e0000007f0000007f0000007f000000
+  lyreR: 255
+  autoSweep: 1
+  sweepSpeed: 1.8
+  sweepAmplitudePan: 1
+  sweepAmplitudeTilt: 0
+  moveSpeed: 255
 --- !u!114 &-2507959557612205417
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2874,37 +3522,6 @@ MonoBehaviour:
   easeOut: 4
   fitToWall: 1
   entrance: 1
-  pixelScale: 2
-  hitFlash: 1
-  onStart:
-    m_PersistentCalls:
-      m_Calls: []
-  onEnd:
-    m_PersistentCalls:
-      m_Calls: []
---- !u!114 &-2064528847012223631
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4db28910b03fe4e06b00d98193749e8b, type: 3}
-  m_Name: Text_AllDayLong(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
-  m_EditorClassIdentifier: Assembly-CSharp::EntityTextClip
-  text: DELETE MY NUMBER
-  color: {r: 0.35, g: 0.95, b: 0.2, a: 1}
-  backgroundColor: {r: 0, g: 0, b: 0, a: 1}
-  position: {x: 0.5, y: 0.5}
-  size: 0.16
-  fadeIn: 0.05
-  fadeOut: 0.2
-  easeIn: 5
-  easeOut: 4
-  fitToWall: 1
-  entrance: 5
   pixelScale: 2
   hitFlash: 1
   onStart:
@@ -3030,6 +3647,38 @@ MonoBehaviour:
   onEnd:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &-1245027337321584213
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfdb79428ecc4d28bf25d320605caa21, type: 3}
+  m_Name: Dev_Show(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::DeviceShowClip
+  enableProjector: 1
+  projectorDimmer: 255
+  projectorShutter: 255
+  projectorR: 255
+  projectorG: 255
+  projectorB: 255
+  projectorW: 65
+  projectorBlink: 1
+  projectorBlinkHz: 0.61
+  enableLyres: 1
+  lyreDimmer: 255
+  lyreShutter: 255
+  lyreColorWheel: 255
+  lyreColorWheels: 7e0000007f0000007f0000007f000000
+  lyreR: 255
+  autoSweep: 1
+  sweepSpeed: 1.8
+  sweepAmplitudePan: 1
+  sweepAmplitudeTilt: 0
+  moveSpeed: 255
 --- !u!114 &-751554588687672345
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3180,6 +3829,38 @@ MonoBehaviour:
   onEnd:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &754443292726209505
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfdb79428ecc4d28bf25d320605caa21, type: 3}
+  m_Name: Dev_Show(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::DeviceShowClip
+  enableProjector: 1
+  projectorDimmer: 255
+  projectorShutter: 255
+  projectorR: 255
+  projectorG: 255
+  projectorB: 255
+  projectorW: 65
+  projectorBlink: 1
+  projectorBlinkHz: 0.61
+  enableLyres: 1
+  lyreDimmer: 255
+  lyreShutter: 255
+  lyreColorWheel: 255
+  lyreColorWheels: 7e0000007f0000007f0000007f000000
+  lyreR: 255
+  autoSweep: 1
+  sweepSpeed: 1.8
+  sweepAmplitudePan: 1
+  sweepAmplitudeTilt: 0
+  moveSpeed: 255
 --- !u!114 &935196281376230950
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3216,6 +3897,38 @@ MonoBehaviour:
   m_bufferingTime: 0.1
   m_ClipProperties:
     volume: 1
+--- !u!114 &990725115177795370
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfdb79428ecc4d28bf25d320605caa21, type: 3}
+  m_Name: Dev_Show(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::DeviceShowClip
+  enableProjector: 1
+  projectorDimmer: 255
+  projectorShutter: 255
+  projectorR: 255
+  projectorG: 255
+  projectorB: 255
+  projectorW: 65
+  projectorBlink: 1
+  projectorBlinkHz: 0.61
+  enableLyres: 1
+  lyreDimmer: 255
+  lyreShutter: 255
+  lyreColorWheel: 255
+  lyreColorWheels: 7e0000007f0000007f0000007f000000
+  lyreR: 255
+  autoSweep: 1
+  sweepSpeed: 1.8
+  sweepAmplitudePan: 1
+  sweepAmplitudeTilt: 0
+  moveSpeed: 255
 --- !u!114 &1227753453721800033
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3247,6 +3960,38 @@ MonoBehaviour:
   onEnd:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1247717482026316467
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfdb79428ecc4d28bf25d320605caa21, type: 3}
+  m_Name: Dev_Show(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::DeviceShowClip
+  enableProjector: 1
+  projectorDimmer: 255
+  projectorShutter: 255
+  projectorR: 255
+  projectorG: 255
+  projectorB: 255
+  projectorW: 65
+  projectorBlink: 1
+  projectorBlinkHz: 0.61
+  enableLyres: 1
+  lyreDimmer: 255
+  lyreShutter: 255
+  lyreColorWheel: 255
+  lyreColorWheels: 7e0000007f0000007f0000007f000000
+  lyreR: 255
+  autoSweep: 1
+  sweepSpeed: 1.8
+  sweepAmplitudePan: 1
+  sweepAmplitudeTilt: 0
+  moveSpeed: 255
 --- !u!114 &1412772675397780981
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3342,7 +4087,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4db28910b03fe4e06b00d98193749e8b, type: 3}
   m_Name: Text_AllDayLong(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
   m_EditorClassIdentifier: Assembly-CSharp::EntityTextClip
-  text: BURN THE PHONE
+  text: THE PHONE
   color: {r: 0.35, g: 0.95, b: 0.2, a: 1}
   backgroundColor: {r: 0, g: 0, b: 0, a: 1}
   position: {x: 0.5, y: 0.5}
@@ -3361,6 +4106,70 @@ MonoBehaviour:
   onEnd:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &3273958388332340809
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfdb79428ecc4d28bf25d320605caa21, type: 3}
+  m_Name: Dev_Show(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::DeviceShowClip
+  enableProjector: 1
+  projectorDimmer: 255
+  projectorShutter: 255
+  projectorR: 255
+  projectorG: 255
+  projectorB: 255
+  projectorW: 65
+  projectorBlink: 1
+  projectorBlinkHz: 0.61
+  enableLyres: 1
+  lyreDimmer: 255
+  lyreShutter: 255
+  lyreColorWheel: 255
+  lyreColorWheels: 7e0000007f0000007f0000007f000000
+  lyreR: 255
+  autoSweep: 1
+  sweepSpeed: 1.8
+  sweepAmplitudePan: 1
+  sweepAmplitudeTilt: 0
+  moveSpeed: 255
+--- !u!114 &3519555900364353953
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfdb79428ecc4d28bf25d320605caa21, type: 3}
+  m_Name: Dev_Show(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::DeviceShowClip
+  enableProjector: 1
+  projectorDimmer: 255
+  projectorShutter: 255
+  projectorR: 255
+  projectorG: 255
+  projectorB: 255
+  projectorW: 65
+  projectorBlink: 1
+  projectorBlinkHz: 0.61
+  enableLyres: 1
+  lyreDimmer: 255
+  lyreShutter: 255
+  lyreColorWheel: 255
+  lyreColorWheels: 7e0000007f0000007f0000007f000000
+  lyreR: 255
+  autoSweep: 1
+  sweepSpeed: 1.8
+  sweepAmplitudePan: 1
+  sweepAmplitudeTilt: 0
+  moveSpeed: 255
 --- !u!114 &3638470906356069912
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3393,7 +4202,39 @@ MonoBehaviour:
   sweepAmplitudePan: 110
   sweepAmplitudeTilt: 0
   moveSpeed: 128
---- !u!114 &4204391606610244809
+--- !u!114 &3798883095339920303
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfdb79428ecc4d28bf25d320605caa21, type: 3}
+  m_Name: Dev_Show(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::DeviceShowClip
+  enableProjector: 1
+  projectorDimmer: 255
+  projectorShutter: 255
+  projectorR: 255
+  projectorG: 255
+  projectorB: 255
+  projectorW: 65
+  projectorBlink: 1
+  projectorBlinkHz: 0.61
+  enableLyres: 1
+  lyreDimmer: 255
+  lyreShutter: 255
+  lyreColorWheel: 255
+  lyreColorWheels: 7e0000007f0000007f0000007f000000
+  lyreR: 255
+  autoSweep: 1
+  sweepSpeed: 1.8
+  sweepAmplitudePan: 1
+  sweepAmplitudeTilt: 0
+  moveSpeed: 255
+--- !u!114 &4052800342335349625
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3403,19 +4244,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4db28910b03fe4e06b00d98193749e8b, type: 3}
-  m_Name: Text_AllDayLong(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_Name: Text_AllDayLong(Clone)(Clone)
   m_EditorClassIdentifier: Assembly-CSharp::EntityTextClip
-  text: BURN THE PHONE
+  text: COPY
   color: {r: 0.35, g: 0.95, b: 0.2, a: 1}
   backgroundColor: {r: 0, g: 0, b: 0, a: 1}
   position: {x: 0.5, y: 0.5}
   size: 0.16
-  fadeIn: 0.05
+  fadeIn: 0.12
   fadeOut: 0.2
-  easeIn: 5
+  easeIn: 8
   easeOut: 4
   fitToWall: 1
-  entrance: 5
+  entrance: 1
   pixelScale: 2
   hitFlash: 1
   onStart:
@@ -3424,6 +4265,38 @@ MonoBehaviour:
   onEnd:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4353830566147865592
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfdb79428ecc4d28bf25d320605caa21, type: 3}
+  m_Name: Dev_Show(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::DeviceShowClip
+  enableProjector: 1
+  projectorDimmer: 255
+  projectorShutter: 255
+  projectorR: 255
+  projectorG: 255
+  projectorB: 255
+  projectorW: 65
+  projectorBlink: 1
+  projectorBlinkHz: 0.61
+  enableLyres: 1
+  lyreDimmer: 255
+  lyreShutter: 255
+  lyreColorWheel: 255
+  lyreColorWheels: 7e0000007f0000007f0000007f000000
+  lyreR: 255
+  autoSweep: 1
+  sweepSpeed: 1.8
+  sweepAmplitudePan: 1
+  sweepAmplitudeTilt: 0
+  moveSpeed: 255
 --- !u!114 &4467920104648210747
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3474,6 +4347,38 @@ MonoBehaviour:
   onEnd:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &5055542704741564071
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfdb79428ecc4d28bf25d320605caa21, type: 3}
+  m_Name: Dev_Show(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::DeviceShowClip
+  enableProjector: 1
+  projectorDimmer: 255
+  projectorShutter: 255
+  projectorR: 255
+  projectorG: 255
+  projectorB: 255
+  projectorW: 65
+  projectorBlink: 1
+  projectorBlinkHz: 0.61
+  enableLyres: 1
+  lyreDimmer: 255
+  lyreShutter: 255
+  lyreColorWheel: 255
+  lyreColorWheels: 7e0000007f0000007f0000007f000000
+  lyreR: 255
+  autoSweep: 1
+  sweepSpeed: 1.8
+  sweepAmplitudePan: 1
+  sweepAmplitudeTilt: 0
+  moveSpeed: 255
 --- !u!114 &5300196823688136494
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3498,6 +4403,69 @@ MonoBehaviour:
   fitToWall: 1
   entrance: 1
   pixelScale: 1
+  hitFlash: 1
+  onStart:
+    m_PersistentCalls:
+      m_Calls: []
+  onEnd:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &5536205116779313838
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfdb79428ecc4d28bf25d320605caa21, type: 3}
+  m_Name: Dev_Show(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::DeviceShowClip
+  enableProjector: 1
+  projectorDimmer: 255
+  projectorShutter: 255
+  projectorR: 255
+  projectorG: 255
+  projectorB: 255
+  projectorW: 65
+  projectorBlink: 1
+  projectorBlinkHz: 0.61
+  enableLyres: 1
+  lyreDimmer: 255
+  lyreShutter: 255
+  lyreColorWheel: 255
+  lyreColorWheels: 7e0000007f0000007f0000007f000000
+  lyreR: 255
+  autoSweep: 1
+  sweepSpeed: 1.8
+  sweepAmplitudePan: 1
+  sweepAmplitudeTilt: 0
+  moveSpeed: 255
+--- !u!114 &5699822407170653780
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4db28910b03fe4e06b00d98193749e8b, type: 3}
+  m_Name: Text_AllDayLong(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::EntityTextClip
+  text: THE PHONE
+  color: {r: 0.35, g: 0.95, b: 0.2, a: 1}
+  backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+  position: {x: 0.5, y: 0.5}
+  size: 0.16
+  fadeIn: 0.05
+  fadeOut: 0.2
+  easeIn: 5
+  easeOut: 4
+  fitToWall: 1
+  entrance: 5
+  pixelScale: 2
   hitFlash: 1
   onStart:
     m_PersistentCalls:
@@ -3536,6 +4504,38 @@ MonoBehaviour:
   onEnd:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6034635234654735200
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfdb79428ecc4d28bf25d320605caa21, type: 3}
+  m_Name: Dev_Show(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::DeviceShowClip
+  enableProjector: 1
+  projectorDimmer: 255
+  projectorShutter: 255
+  projectorR: 255
+  projectorG: 255
+  projectorB: 255
+  projectorW: 65
+  projectorBlink: 1
+  projectorBlinkHz: 0.61
+  enableLyres: 1
+  lyreDimmer: 255
+  lyreShutter: 255
+  lyreColorWheel: 255
+  lyreColorWheels: 7e0000007f0000007f0000007f000000
+  lyreR: 255
+  autoSweep: 1
+  sweepSpeed: 1.8
+  sweepAmplitudePan: 1
+  sweepAmplitudeTilt: 0
+  moveSpeed: 255
 --- !u!114 &6381748357973104292
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3560,6 +4560,37 @@ MonoBehaviour:
   fitToWall: 1
   entrance: 1
   pixelScale: 1
+  hitFlash: 1
+  onStart:
+    m_PersistentCalls:
+      m_Calls: []
+  onEnd:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &7415604464470027008
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4db28910b03fe4e06b00d98193749e8b, type: 3}
+  m_Name: Text_Numbers(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::EntityTextClip
+  text: FACES
+  color: {r: 0.35, g: 0.95, b: 0.2, a: 1}
+  backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+  position: {x: 0.5, y: 0.5}
+  size: 0.24
+  fadeIn: 0.12
+  fadeOut: 0.08
+  easeIn: 8
+  easeOut: 4
+  fitToWall: 1
+  entrance: 1
+  pixelScale: 2
   hitFlash: 1
   onStart:
     m_PersistentCalls:
@@ -3598,6 +4629,38 @@ MonoBehaviour:
   onEnd:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &7786079239331889484
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfdb79428ecc4d28bf25d320605caa21, type: 3}
+  m_Name: Dev_Show(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: Assembly-CSharp::DeviceShowClip
+  enableProjector: 1
+  projectorDimmer: 255
+  projectorShutter: 255
+  projectorR: 255
+  projectorG: 255
+  projectorB: 255
+  projectorW: 65
+  projectorBlink: 1
+  projectorBlinkHz: 0.61
+  enableLyres: 1
+  lyreDimmer: 255
+  lyreShutter: 255
+  lyreColorWheel: 255
+  lyreColorWheels: 7e0000007f0000007f0000007f000000
+  lyreR: 255
+  autoSweep: 1
+  sweepSpeed: 1.8
+  sweepAmplitudePan: 1
+  sweepAmplitudeTilt: 0
+  moveSpeed: 255
 --- !u!114 &7816448546078088606
 MonoBehaviour:
   m_ObjectHideFlags: 1
