@@ -1,12 +1,12 @@
 // Piste Timeline — convergence géométrique (lignes -> grille -> matrice de carrés).
-// Binding : EntityManager. Même architecture que FluidWallTrack.
+// Binding : LedWall (LedWallVisualizer), comme FluidWallTrack.
 
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
 
 [TrackClipType(typeof(ConvergenceGridClip))]
-[TrackBindingType(typeof(EntityManager))]
+[TrackBindingType(typeof(LedWallVisualizer))]
 [TrackColor(0.95f, 0.95f, 0.95f)]
 public class ConvergenceGridTrack : TrackAsset
 {
@@ -20,8 +20,8 @@ public class ConvergenceGridMixerBehaviour : PlayableBehaviour
 {
     public override void ProcessFrame(Playable playable, FrameData info, object playerData)
     {
-        var entityManager = playerData as EntityManager;
-        if (entityManager == null) return;
+        var wall = playerData as LedWallVisualizer;
+        if (wall == null || !wall.IsBuilt || wall.EntityManager == null) return;
 
         ConvergenceGridBehaviour best = null;
         Playable bestPlayable = default;
@@ -46,6 +46,6 @@ public class ConvergenceGridMixerBehaviour : PlayableBehaviour
         }
 
         if (best != null)
-            best.Apply(entityManager, (float)bestPlayable.GetTime(), (float)bestPlayable.GetDuration());
+            best.Apply(wall.EntityManager, wall, (float)bestPlayable.GetTime(), (float)bestPlayable.GetDuration());
     }
 }

@@ -84,13 +84,16 @@ public static class GifToWallMediaImporter
             ? WallMapping.VisibleRows
             : 128;
 
-        // Pixel art : neighbor. Vidéo : bilinear (flags=bilinear) pour éviter le crénelage.
+        // Pixel art : neighbor. Vidéo : bilinear. Crop centre (pas d'étirement) vers la résolution mur.
         string scaleFlags = ext == ".gif" ? "neighbor" : "bilinear";
-        string pattern = Path.Combine(absDir, "frame_%02d.png");
+        string pattern = Path.Combine(absDir, "frame_%03d.png");
+        string vf =
+            $"scale={cols}:{rows}:force_original_aspect_ratio=increase:flags={scaleFlags}," +
+            $"crop={cols}:{rows}";
         var psi = new ProcessStartInfo
         {
             FileName = ffmpeg,
-            Arguments = $"-y -i \"{destMedia}\" -vf \"scale={cols}:{rows}:flags={scaleFlags}\" \"{pattern}\"",
+            Arguments = $"-y -i \"{destMedia}\" -vf \"{vf}\" \"{pattern}\"",
             UseShellExecute = false,
             RedirectStandardError = true,
             CreateNoWindow = true,

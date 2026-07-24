@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c748abd1650b463db6ee32d76e82822d, type: 3}
+  m_Name: danse2_Sequence
+  m_EditorClassIdentifier: Assembly-CSharp::WallMediaSequence
+  frames:
+  - {fileID: 2800000, guid: 6b26364d0cc94b0c8e0b28aa37ce393c, type: 3}
+  - {fileID: 2800000, guid: e19fe1a1b141473e8205f45ffa728cf2, type: 3}
+  - {fileID: 2800000, guid: 2e6a62ebba594ac4bcc0088c5c88ad04, type: 3}
+  - {fileID: 2800000, guid: eefe74aaad0d4646a5a149b82e6101f2, type: 3}
+  - {fileID: 2800000, guid: 3d57cfae13d1419cb350d56205f5d824, type: 3}
+  - {fileID: 2800000, guid: fe3e4b78b75d46e2abad07ba4af10cd3, type: 3}
+  - {fileID: 2800000, guid: 7f77a462b10d4a0db85f8065ae4fb693, type: 3}
+  - {fileID: 2800000, guid: 7968ad6496a5471cbd3cbe16a3136bef, type: 3}
+  - {fileID: 2800000, guid: 6833450daed24378ae8dc57177d0041d, type: 3}
+  - {fileID: 2800000, guid: afcf9197e01243b99877458e9d2dd4f7, type: 3}
+  - {fileID: 2800000, guid: 45683529bc2049b9b9c4f321f994e236, type: 3}
+  - {fileID: 2800000, guid: 969e782cdabe408aa8818f901caa3c39, type: 3}
+  - {fileID: 2800000, guid: 9ea1680b683d4551b4f6a1a8bd5e4ca4, type: 3}
+  - {fileID: 2800000, guid: 03f34c40253d430ea63285506f3e4a26, type: 3}
+  - {fileID: 2800000, guid: 406ba8a1f7ba4851aadfc4064bf9efa8, type: 3}
+  - {fileID: 2800000, guid: 3c985028dfba4f668095d1444572ef56, type: 3}
+  - {fileID: 2800000, guid: b27da62293954a7889220439f5762885, type: 3}
+  - {fileID: 2800000, guid: 835195aa7c5b471f94ab210d54bc9a30, type: 3}
+  - {fileID: 2800000, guid: 110013137e684964b7dfeed5ad414e52, type: 3}
+  - {fileID: 2800000, guid: 08e22e3e8bd34216b1a05a146d129b1e, type: 3}
+  framesPerSecond: 15
+  loop: 1

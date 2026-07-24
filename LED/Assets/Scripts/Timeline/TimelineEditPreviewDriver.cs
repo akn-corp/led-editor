@@ -1,7 +1,7 @@
 // Assure mur + devices pour Preview Timeline Edit Mode (= Play Mode).
 //
-// Le mixer DeviceTrack n’est pas fiable hors Play Mode : on pilote les clips
-// directement depuis le Director.time (throttle pour ne pas geler l’éditeur).
+// LedWall est DontSaveInEditor : FindFirstObjectByType le rate souvent.
+// On passe par SceneBuilder.WallVisualizer + Resources.FindObjectsOfTypeAll.
 
 using UnityEngine;
 using UnityEngine.Playables;
@@ -52,13 +52,17 @@ public class TimelineEditPreviewDriver : MonoBehaviour
     {
         if (Application.isPlaying) return;
         EnsureEditPreviewReady();
+#if UNITY_EDITOR
+        // Force un premier rendu preview même sans scrub
+        _lastSyncedTime = double.NaN;
+        SyncDevicesForEditPreview();
+#endif
     }
 
 #if UNITY_EDITOR
     void EditorUpdate()
     {
         if (Application.isPlaying || !ensureBuiltInEditMode) return;
-        // Max ~20 Hz — évite de saturer le thread éditeur
         if (Time.realtimeSinceStartup < _nextSyncRealtime) return;
         _nextSyncRealtime = Time.realtimeSinceStartup + 0.05f;
         SyncDevicesForEditPreview();
@@ -78,7 +82,6 @@ public class TimelineEditPreviewDriver : MonoBehaviour
             _director = GetComponent<PlayableDirector>();
         if (_director == null || _director.playableAsset == null) return;
 
-        // Skip si le temps n’a pas bougé (sauf première frame)
         if (!double.IsNaN(_lastSyncedTime) && System.Math.Abs(_director.time - _lastSyncedTime) < 0.0001)
             return;
         _lastSyncedTime = _director.time;
@@ -88,13 +91,22 @@ public class TimelineEditPreviewDriver : MonoBehaviour
         if (deviceManager == null)
             deviceManager = FindFirstObjectByType<DeviceManager>();
 
+        // LedWall DontSave : prioriser SceneBuilder, puis FindObjectsOfTypeAll
+        var wall = ResolveLedWall();
+        var painter = wall != null
+            ? wall.GetComponent<LedWallTextPainter>()
+            : sceneBuilder != null ? sceneBuilder.TextPainter : null;
+        var entities = wall != null ? wall.EntityManager : null;
+        if (entities == null)
+            entities = FindFirstObjectByType<EntityManager>();
+
+        EntityTextTrackBinder.BindAll(_director, painter, entities, deviceManager, rebuildGraph: false);
+        if (wall != null)
+            EntityTextTrackBinder.DriveWallFromTimeline(_director, wall);
+
         bool driven = false;
         if (deviceManager != null)
             driven = EntityTextTrackBinder.DriveDevicesFromTimeline(_director, deviceManager);
-
-        var wall = Object.FindFirstObjectByType<LedWallVisualizer>();
-        if (wall != null)
-            EntityTextTrackBinder.DriveWallMediaFromTimeline(_director, wall);
 
         if (deviceManager == null) return;
 
@@ -113,6 +125,17 @@ public class TimelineEditPreviewDriver : MonoBehaviour
             Debug.Log(
                 $"[EditPreview] t={_director.time:F2}s projDim={d0.dimmer} lyre1 pan/tilt={d1.pan}/{d1.tilt}");
         }
+    }
+
+    private LedWallVisualizer ResolveLedWall()
+    {
+        if (sceneBuilder != null)
+        {
+            if (sceneBuilder.WallVisualizer != null && sceneBuilder.WallVisualizer.IsBuilt)
+                return sceneBuilder.WallVisualizer;
+        }
+
+        return RippleWaveBehaviour.FindLedWallVisualizer();
     }
 
     private static DevicePreviewVisualizer FindPreviewVisualizer()
