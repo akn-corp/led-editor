@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c748abd1650b463db6ee32d76e82822d, type: 3}
+  m_Name: paloma_rumba_clash_Sequence
+  m_EditorClassIdentifier: Assembly-CSharp::WallMediaSequence
+  frames:
+  - {fileID: 2800000, guid: 9c7677b804c8412392c598bbc1b0543c, type: 3}
+  - {fileID: 2800000, guid: a925408b13d24b9595b28f93ddee6d7c, type: 3}
+  - {fileID: 2800000, guid: aad709a660af4e079ff83a2de596125e, type: 3}
+  - {fileID: 2800000, guid: 1afea221eb144a21bb1ff87bc22574e9, type: 3}
+  - {fileID: 2800000, guid: 8e344f208bfe4121ad8b1bcec38b0bbe, type: 3}
+  - {fileID: 2800000, guid: a60f27324c2745ca9110b6358d6053a8, type: 3}
+  - {fileID: 2800000, guid: 395e7a0fce714eedae0516852a4f7ca4, type: 3}
+  - {fileID: 2800000, guid: 06b2876548374f92a6397d0ac03f58f6, type: 3}
+  - {fileID: 2800000, guid: c6e3c385d24248939251dc761a3c27cd, type: 3}
+  - {fileID: 2800000, guid: 8de0c78f4e474a428e1efd74117aacee, type: 3}
+  - {fileID: 2800000, guid: 9f378d5073f84587a7618cf7de97639d, type: 3}
+  - {fileID: 2800000, guid: b3bbc35c55b54ab7bc84b25f8d493333, type: 3}
+  - {fileID: 2800000, guid: 95db0cdb5c4e41508e0d3d0fae220dc8, type: 3}
+  - {fileID: 2800000, guid: 3d81262c6aeb45dbac9e6042a2fed2be, type: 3}
+  - {fileID: 2800000, guid: 159dc0ae787d4ba0b62b1b90c20e241a, type: 3}
+  - {fileID: 2800000, guid: 4681685989ee4d22b965ebdbfc9ec2fd, type: 3}
+  - {fileID: 2800000, guid: ac9423cd15c241ae9ba2f16640ff6fb0, type: 3}
+  - {fileID: 2800000, guid: c5d36a8ba72047679733813927c76de7, type: 3}
+  - {fileID: 2800000, guid: 8eab374881ca40a09928609311f9b3f3, type: 3}
+  - {fileID: 2800000, guid: 603149620c74422da532522a9562ee05, type: 3}
+  - {fileID: 2800000, guid: 4357da1450124a31ad112468e5a3e321, type: 3}
+  - {fileID: 2800000, guid: d64372d8dcee40789f43746060b11927, type: 3}
+  - {fileID: 2800000, guid: 086856a8d3d24a448a8f635f0018ac33, type: 3}
+  - {fileID: 2800000, guid: 48810c9ce36543d783b01a3353598e9f, type: 3}
+  framesPerSecond: 24
+  loop: 0

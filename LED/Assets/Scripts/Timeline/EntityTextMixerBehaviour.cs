@@ -38,15 +38,16 @@ public class EntityTextMixerBehaviour : PlayableBehaviour
 
         if (best != null)
         {
-            float opacity = best.EvaluateOpacity(bestPlayable) * bestWeight;
+            var motion = best.EvaluateMotion(bestPlayable, bestWeight);
             painter.PaintText(
-                best.text,
-                best.position,
-                best.size,
-                best.color,
-                opacity,
-                best.backgroundColor,
-                best.fitToWall);
+                motion.text,
+                motion.position,
+                motion.size,
+                motion.color,
+                motion.opacity,
+                motion.background,
+                motion.fitToWall,
+                motion.pixelScale);
             _wasActive = true;
         }
         // Ne pas Clear(black) en fin de clip : FluidWall / Paloma peignent le mur ensuite.

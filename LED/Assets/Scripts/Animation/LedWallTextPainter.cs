@@ -73,7 +73,8 @@ public class LedWallTextPainter : MonoBehaviour
         Color color,
         float opacity,
         Color background,
-        bool fitToWall = true)
+        bool fitToWall = true,
+        int pixelScale = 1)
     {
         if (!EnsureBuffers()) return;
 
@@ -83,7 +84,7 @@ public class LedWallTextPainter : MonoBehaviour
         if (!string.IsNullOrEmpty(text) && opacity > 0.02f)
         {
             if (UsePixelMode)
-                DrawTextBitmap(text, positionNorm, color, opacity, fitToWall);
+                DrawTextBitmap(text, positionNorm, color, opacity, fitToWall, pixelScale);
             else
                 DrawTextTrueType(text, positionNorm, sizeFrac, color, opacity, fitToWall);
         }
@@ -98,12 +99,19 @@ public class LedWallTextPainter : MonoBehaviour
             _displayPixels[i] = background;
     }
 
-    public void DrawTextLayer(string text, Vector2 positionNorm, float sizeFrac, Color color, float opacity, bool fitToWall = true)
+    public void DrawTextLayer(
+        string text,
+        Vector2 positionNorm,
+        float sizeFrac,
+        Color color,
+        float opacity,
+        bool fitToWall = true,
+        int pixelScale = 1)
     {
         if (!EnsureBuffers()) return;
         if (string.IsNullOrEmpty(text) || opacity < 0.02f) return;
         if (UsePixelMode)
-            DrawTextBitmap(text, positionNorm, color, opacity, fitToWall);
+            DrawTextBitmap(text, positionNorm, color, opacity, fitToWall, pixelScale);
         else
             DrawTextTrueType(text, positionNorm, sizeFrac, color, opacity, fitToWall);
     }
@@ -173,36 +181,53 @@ public class LedWallTextPainter : MonoBehaviour
     // LET'S, BURN THE PHONE, DELETE MY NUMBER, GOOOOOOOOOO.
     // -------------------------------------------------------------------------
 
-    private void DrawTextBitmap(string text, Vector2 centerNorm, Color color, float opacity, bool fitToWall)
+    private void DrawTextBitmap(
+        string text,
+        Vector2 centerNorm,
+        Color color,
+        float opacity,
+        bool fitToWall,
+        int pixelScale = 1)
     {
         string upper = text.ToUpperInvariant().Replace('\r', '\n');
+        int scale = Mathf.Clamp(pixelScale, 1, 2);
 
         // 5×7 seulement si tout tient sur UNE ligne ; sinon 3×5 + wrap
+        // Avec scale 2, on mesure en largeur « logique » (avant scale).
+        int maxLogicalW = Mathf.Max(1, _columns / scale);
         bool fits5x7 = !upper.Contains('\n')
-            && MeasureBitmapWidth(upper, BitmapFont5x7, 5, 1) <= _columns;
-        var font = fits5x7 ? BitmapFont5x7 : BitmapFont3x5;
+            && MeasureBitmapWidth(upper, LedBitmapFont.Font5x7, 5, 1) <= maxLogicalW;
+        // Sur 32×32 en scale 2, forcer 3×5 pour garder des hooks lisibles
+        if (scale >= 2)
+            fits5x7 = false;
+
+        var font = fits5x7 ? LedBitmapFont.Font5x7 : LedBitmapFont.Font3x5;
         int glyphW = fits5x7 ? 5 : 3;
         int glyphH = fits5x7 ? 7 : 5;
         int gap = 1;
         int lineGap = 1;
-        int maxW = fitToWall ? _columns : _columns;
+        int maxW = fitToWall ? maxLogicalW : maxLogicalW;
 
         List<string> lines = WrapBitmapLines(upper, font, glyphW, gap, maxW);
 
+        int scaledGlyphH = glyphH * scale;
+        int scaledLineGap = lineGap * scale;
+
         // Si trop de lignes verticalement : réduire l’interligne, puis tronquer
-        int maxLines = Mathf.Max(1, (_rows + lineGap) / (glyphH + lineGap));
+        int maxLines = Mathf.Max(1, (_rows + scaledLineGap) / (scaledGlyphH + scaledLineGap));
         if (lines.Count > maxLines && lineGap > 0)
         {
             lineGap = 0;
-            maxLines = Mathf.Max(1, _rows / glyphH);
+            scaledLineGap = 0;
+            maxLines = Mathf.Max(1, _rows / scaledGlyphH);
         }
         if (lines.Count > maxLines)
             lines = lines.GetRange(0, maxLines);
 
-        int blockH = lines.Count * glyphH + Mathf.Max(0, lines.Count - 1) * lineGap;
+        int blockH = lines.Count * scaledGlyphH + Mathf.Max(0, lines.Count - 1) * scaledLineGap;
         int blockW = 0;
         foreach (string line in lines)
-            blockW = Mathf.Max(blockW, MeasureBitmapWidth(line, font, glyphW, gap));
+            blockW = Mathf.Max(blockW, MeasureBitmapWidth(line, font, glyphW, gap) * scale);
 
         int originX = Mathf.RoundToInt(centerNorm.x * (_columns - 1) - (blockW - 1) * 0.5f);
         int originY = Mathf.RoundToInt(centerNorm.y * (_rows - 1) - (blockH - 1) * 0.5f);
@@ -215,11 +240,11 @@ public class LedWallTextPainter : MonoBehaviour
         for (int li = 0; li < lines.Count; li++)
         {
             string line = lines[li];
-            int lineW = MeasureBitmapWidth(line, font, glyphW, gap);
+            int lineW = MeasureBitmapWidth(line, font, glyphW, gap) * scale;
             // Chaque ligne centrée horizontalement dans le bloc
             int lineX = originX + (blockW - lineW) / 2;
-            int lineY = originY + (lines.Count - 1 - li) * (glyphH + lineGap);
-            DrawBitmapLine(line, font, glyphW, glyphH, gap, lineX, lineY, fg);
+            int lineY = originY + (lines.Count - 1 - li) * (scaledGlyphH + scaledLineGap);
+            DrawBitmapLine(line, font, glyphW, glyphH, gap, lineX, lineY, fg, scale);
         }
     }
 
@@ -231,36 +256,41 @@ public class LedWallTextPainter : MonoBehaviour
         int gap,
         int originX,
         int originY,
-        Color fg)
+        Color fg,
+        int pixelScale = 1)
     {
+        int scale = Mathf.Clamp(pixelScale, 1, 2);
         int penX = originX;
         for (int i = 0; i < line.Length; i++)
         {
             char ch = line[i];
             if (ch == ' ')
             {
-                penX += glyphW / 2 + gap;
+                penX += (glyphW / 2 + gap) * scale;
                 continue;
             }
 
             if (!font.TryGetValue(ch, out string[] rows))
             {
-                penX += glyphW + gap;
+                penX += (glyphW + gap) * scale;
                 continue;
             }
 
             for (int gy = 0; gy < rows.Length && gy < glyphH; gy++)
             {
                 string row = rows[gy];
-                int py = originY + (glyphH - 1 - gy);
+                int basePy = originY + (glyphH - 1 - gy) * scale;
                 for (int gx = 0; gx < row.Length && gx < glyphW; gx++)
                 {
                     if (row[gx] != '#') continue;
-                    SetPixelBlend(penX + gx, py, fg, 1f);
+                    int basePx = penX + gx * scale;
+                    for (int sy = 0; sy < scale; sy++)
+                    for (int sx = 0; sx < scale; sx++)
+                        SetPixelBlend(basePx + sx, basePy + sy, fg, 1f);
                 }
             }
 
-            penX += glyphW + gap;
+            penX += (glyphW + gap) * scale;
         }
     }
 
@@ -520,103 +550,5 @@ public class LedWallTextPainter : MonoBehaviour
         _visualizer.ApplyDisplayPixels(_displayPixels);
     }
 
-    // -------------------------------------------------------------------------
-    // Polices bitmap (haut → bas). '#' = LED allumée.
-    // -------------------------------------------------------------------------
-
-    private static readonly Dictionary<char, string[]> BitmapFont3x5 = new Dictionary<char, string[]>
-    {
-        { 'A', new[] { ".#.", "#.#", "###", "#.#", "#.#" } },
-        { 'B', new[] { "##.", "#.#", "##.", "#.#", "##." } },
-        { 'C', new[] { ".##", "#..", "#..", "#..", ".##" } },
-        { 'D', new[] { "##.", "#.#", "#.#", "#.#", "##." } },
-        { 'E', new[] { "###", "#..", "##.", "#..", "###" } },
-        { 'F', new[] { "###", "#..", "##.", "#..", "#.." } },
-        { 'G', new[] { ".##", "#..", "#.#", "#.#", ".##" } },
-        { 'H', new[] { "#.#", "#.#", "###", "#.#", "#.#" } },
-        { 'I', new[] { "###", ".#.", ".#.", ".#.", "###" } },
-        { 'J', new[] { "..#", "..#", "..#", "#.#", ".#." } },
-        { 'K', new[] { "#.#", "#.#", "##.", "#.#", "#.#" } },
-        { 'L', new[] { "#..", "#..", "#..", "#..", "###" } },
-        { 'M', new[] { "#.#", "###", "###", "#.#", "#.#" } },
-        { 'N', new[] { "#.#", "###", "###", "###", "#.#" } },
-        { 'O', new[] { ".#.", "#.#", "#.#", "#.#", ".#." } },
-        { 'P', new[] { "##.", "#.#", "##.", "#..", "#.." } },
-        { 'Q', new[] { ".#.", "#.#", "#.#", ".##", "..#" } },
-        { 'R', new[] { "##.", "#.#", "##.", "#.#", "#.#" } },
-        { 'S', new[] { ".##", "#..", ".#.", "..#", "##." } },
-        { 'T', new[] { "###", ".#.", ".#.", ".#.", ".#." } },
-        { 'U', new[] { "#.#", "#.#", "#.#", "#.#", ".#." } },
-        { 'V', new[] { "#.#", "#.#", "#.#", "#.#", ".#." } },
-        { 'W', new[] { "#.#", "#.#", "###", "###", "#.#" } },
-        { 'X', new[] { "#.#", "#.#", ".#.", "#.#", "#.#" } },
-        { 'Y', new[] { "#.#", "#.#", ".#.", ".#.", ".#." } },
-        { 'Z', new[] { "###", "..#", ".#.", "#..", "###" } },
-        { '0', new[] { ".#.", "#.#", "#.#", "#.#", ".#." } },
-        { '1', new[] { ".#.", "##.", ".#.", ".#.", "###" } },
-        { '2', new[] { "##.", "..#", ".#.", "#..", "###" } },
-        { '3', new[] { "###", "..#", ".##", "..#", "###" } },
-        { '4', new[] { "#.#", "#.#", "###", "..#", "..#" } },
-        { '5', new[] { "###", "#..", "##.", "..#", "##." } },
-        { '6', new[] { ".##", "#..", "##.", "#.#", ".#." } },
-        { '7', new[] { "###", "..#", ".#.", ".#.", ".#." } },
-        { '8', new[] { ".#.", "#.#", ".#.", "#.#", ".#." } },
-        { '9', new[] { ".#.", "#.#", ".##", "..#", "##." } },
-        { '\'', new[] { ".#.", ".#.", "...", "...", "..." } },
-        { '!', new[] { ".#.", ".#.", ".#.", "...", ".#." } },
-        { '?', new[] { "##.", "..#", ".#.", "...", ".#." } },
-        { '.', new[] { "...", "...", "...", "...", ".#." } },
-        { ',', new[] { "...", "...", "...", ".#.", "#.." } },
-        { '-', new[] { "...", "...", "###", "...", "..." } },
-        { ':', new[] { "...", ".#.", "...", ".#.", "..." } },
-        { '"', new[] { "#.#", "#.#", "...", "...", "..." } },
-    };
-
-    private static readonly Dictionary<char, string[]> BitmapFont5x7 = new Dictionary<char, string[]>
-    {
-        { 'A', new[] { ".###.", "#...#", "#...#", "#####", "#...#", "#...#", "#...#" } },
-        { 'B', new[] { "####.", "#...#", "#...#", "####.", "#...#", "#...#", "####." } },
-        { 'C', new[] { ".###.", "#...#", "#....", "#....", "#....", "#...#", ".###." } },
-        { 'D', new[] { "####.", "#...#", "#...#", "#...#", "#...#", "#...#", "####." } },
-        { 'E', new[] { "#####", "#....", "#....", "####.", "#....", "#....", "#####" } },
-        { 'F', new[] { "#####", "#....", "#....", "####.", "#....", "#....", "#...." } },
-        { 'G', new[] { ".###.", "#...#", "#....", "#..##", "#...#", "#...#", ".###." } },
-        { 'H', new[] { "#...#", "#...#", "#...#", "#####", "#...#", "#...#", "#...#" } },
-        { 'I', new[] { ".###.", "..#..", "..#..", "..#..", "..#..", "..#..", ".###." } },
-        { 'J', new[] { "..###", "...#.", "...#.", "...#.", "...#.", "#..#.", ".##.." } },
-        { 'K', new[] { "#...#", "#..#.", "#.#..", "##...", "#.#..", "#..#.", "#...#" } },
-        { 'L', new[] { "#....", "#....", "#....", "#....", "#....", "#....", "#####" } },
-        { 'M', new[] { "#...#", "##.##", "#.#.#", "#...#", "#...#", "#...#", "#...#" } },
-        { 'N', new[] { "#...#", "##..#", "#.#.#", "#..##", "#...#", "#...#", "#...#" } },
-        { 'O', new[] { ".###.", "#...#", "#...#", "#...#", "#...#", "#...#", ".###." } },
-        { 'P', new[] { "####.", "#...#", "#...#", "####.", "#....", "#....", "#...." } },
-        { 'Q', new[] { ".###.", "#...#", "#...#", "#...#", "#.#.#", "#..#.", ".##.#" } },
-        { 'R', new[] { "####.", "#...#", "#...#", "####.", "#.#..", "#..#.", "#...#" } },
-        { 'S', new[] { ".###.", "#...#", "#....", ".###.", "....#", "#...#", ".###." } },
-        { 'T', new[] { "#####", "..#..", "..#..", "..#..", "..#..", "..#..", "..#.." } },
-        { 'U', new[] { "#...#", "#...#", "#...#", "#...#", "#...#", "#...#", ".###." } },
-        { 'V', new[] { "#...#", "#...#", "#...#", "#...#", "#...#", ".#.#.", "..#.." } },
-        { 'W', new[] { "#...#", "#...#", "#...#", "#.#.#", "#.#.#", "##.##", "#...#" } },
-        { 'X', new[] { "#...#", "#...#", ".#.#.", "..#..", ".#.#.", "#...#", "#...#" } },
-        { 'Y', new[] { "#...#", "#...#", ".#.#.", "..#..", "..#..", "..#..", "..#.." } },
-        { 'Z', new[] { "#####", "....#", "...#.", "..#..", ".#...", "#....", "#####" } },
-        { '0', new[] { ".###.", "#...#", "#..##", "#.#.#", "##..#", "#...#", ".###." } },
-        { '1', new[] { "..#..", ".##..", "..#..", "..#..", "..#..", "..#..", ".###." } },
-        { '2', new[] { ".###.", "#...#", "....#", "..##.", ".#...", "#....", "#####" } },
-        { '3', new[] { ".###.", "#...#", "....#", "..##.", "....#", "#...#", ".###." } },
-        { '4', new[] { "...#.", "..##.", ".#.#.", "#..#.", "#####", "...#.", "...#." } },
-        { '5', new[] { "#####", "#....", "####.", "....#", "....#", "#...#", ".###." } },
-        { '6', new[] { "..##.", ".#...", "#....", "####.", "#...#", "#...#", ".###." } },
-        { '7', new[] { "#####", "....#", "...#.", "..#..", ".#...", ".#...", ".#..." } },
-        { '8', new[] { ".###.", "#...#", "#...#", ".###.", "#...#", "#...#", ".###." } },
-        { '9', new[] { ".###.", "#...#", "#...#", ".####", "....#", "...#.", ".##.." } },
-        { '\'', new[] { "..#..", "..#..", ".#...", ".....", ".....", ".....", "....." } },
-        { '!', new[] { "..#..", "..#..", "..#..", "..#..", "..#..", ".....", "..#.." } },
-        { '?', new[] { ".###.", "#...#", "....#", "..##.", "..#..", ".....", "..#.." } },
-        { '.', new[] { ".....", ".....", ".....", ".....", ".....", "..#..", "..#.." } },
-        { ',', new[] { ".....", ".....", ".....", ".....", "..#..", "..#..", ".#..." } },
-        { '-', new[] { ".....", ".....", ".....", "#####", ".....", ".....", "....." } },
-        { ':', new[] { ".....", "..#..", "..#..", ".....", "..#..", "..#..", "....." } },
-        { '"', new[] { ".#.#.", ".#.#.", ".....", ".....", ".....", ".....", "....." } },
-    };
 }
+

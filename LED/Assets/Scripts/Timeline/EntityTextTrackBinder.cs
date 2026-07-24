@@ -293,12 +293,22 @@ public static class EntityTextTrackBinder
                 {
                     var b = new PalomaRumbaTextBehaviour
                     {
+                        mode = palomaClip.mode,
                         bpm = palomaClip.bpm,
                         maxSpeed = palomaClip.maxSpeed,
                         goldColor = palomaClip.goldColor,
                         redColor = palomaClip.redColor,
                         fontType = palomaClip.fontType,
                         bandHeight = palomaClip.bandHeight,
+                        palomaDirection = palomaClip.palomaDirection,
+                        rumbaDirection = palomaClip.rumbaDirection,
+                        palomaSpeed = palomaClip.palomaSpeed,
+                        rumbaSpeed = palomaClip.rumbaSpeed,
+                        rowPhase = palomaClip.rowPhase,
+                        glyphScale = palomaClip.glyphScale,
+                        rushEnd = palomaClip.rushEnd,
+                        flashEnd = palomaClip.flashEnd,
+                        holdEnd = palomaClip.holdEnd,
                     };
                     b.Apply(wall.EntityManager, wall, localTime, (float)clip.duration);
                     any = true;

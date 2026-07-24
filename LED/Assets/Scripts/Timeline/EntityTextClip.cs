@@ -2,9 +2,9 @@
 //
 // Usage :
 // 1. SceneBuilder.animationMode = None (Timeline pilote le mur)
-// 2. Timeline → Add → Entity Text Track
+// 2. Timeline → Add → EntityText Track
 // 3. Binder LedWall (composant LedWallTextPainter)
-// 4. Add Entity Text Clip → régler text / couleur / fades / OnStart / OnEnd
+// 4. Add EntityText Clip → régler text / couleur / fades / entrance / OnStart / OnEnd
 
 using UnityEngine;
 using UnityEngine.Events;
@@ -22,16 +22,26 @@ public class EntityTextClip : PlayableAsset
     [Tooltip("Centre normalisé sur le mur (0–1)")]
     public Vector2 position = new Vector2(0.5f, 0.5f);
 
-    [Tooltip("Hauteur relative du texte (fraction du mur)")]
+    [Tooltip("Hauteur relative du texte (fraction du mur) — TrueType 128×128")]
     [Range(0.04f, 0.5f)]
     public float size = 0.15f;
 
     [Header("Animation")]
     [Min(0f)] public float fadeIn = 0.15f;
     [Min(0f)] public float fadeOut = 0.15f;
-    public Ease easeIn = Ease.OutExpo;
+    public Ease easeIn = Ease.OutElastic;
     public Ease easeOut = Ease.InExpo;
     public bool fitToWall = true;
+
+    [Tooltip("Entrée Punch Karaoke")]
+    public EntityTextEntrance entrance = EntityTextEntrance.Pop;
+
+    [Tooltip("Échelle glyphes bitmap 32×32 (1 = normal, 2 = hooks)")]
+    [Range(1, 2)]
+    public int pixelScale = 1;
+
+    [Tooltip("Flash blanc court au début du clip")]
+    public bool hitFlash = true;
 
     [Header("Événements")]
     public UnityEvent onStart;
@@ -51,6 +61,9 @@ public class EntityTextClip : PlayableAsset
         b.easeIn = easeIn;
         b.easeOut = easeOut;
         b.fitToWall = fitToWall;
+        b.entrance = entrance;
+        b.pixelScale = pixelScale;
+        b.hitFlash = hitFlash;
         b.onStart = onStart;
         b.onEnd = onEnd;
         return playable;
