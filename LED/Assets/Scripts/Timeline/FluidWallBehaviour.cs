@@ -28,7 +28,7 @@ public class FluidWallBehaviour : PlayableBehaviour
         if (visualizer != null)
             _visualizer = visualizer;
         if (_visualizer == null)
-            _visualizer = Object.FindFirstObjectByType<LedWallVisualizer>();
+            _visualizer = RippleWaveBehaviour.FindLedWallVisualizer();
         if (_visualizer == null)
         {
             Debug.LogWarning("[FluidWall] LedWallVisualizer introuvable — mur pas encore construit.");

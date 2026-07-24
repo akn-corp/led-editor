@@ -25,6 +25,7 @@ public enum WallEffectKind
     FeuArtifice,    // seulement fusee -> explosion -> HETIC
     LiquidChrome,   // mercure liquide / chrome reflechissant
     SonicRings,     // ondes de choc synchronisees au kick (audio-reactif)
+    HeticLogoBuild, // formes du symbole H qui s'ajoutent + typing HETIC
 }
 
 /// <summary>Ordre dans lequel les tiroirs s'allument.</summary>
@@ -230,10 +231,33 @@ public class WallEffectClip : PlayableAsset
     [Tooltip("Teinte du metal. Blanc = chrome pur ; bleute = acier froid ; dore = laiton.")]
     public Color chromeTint = new Color(0.75f, 0.82f, 0.95f);
 
+    [Header("HETIC Logo Build")]
+    [Tooltip("Delai entre chaque forme du symbole H.")]
+    [Min(0.05f)] public float heticShapeInterval = 0.18f;
+
+    [Tooltip("Pause apres la derniere forme, avant le typing.")]
+    [Min(0f)] public float heticHoldBeforeType = 0.2f;
+
+    [Tooltip("Delai entre chaque lettre du mot HETIC.")]
+    [Min(0.05f)] public float heticTypeInterval = 0.12f;
+
+    [Tooltip("Couleur des formes et du texte.")]
+    public Color heticLogoColor = Color.white;
+
+    [Tooltip("Ignore (texte = glyphes du logo). Conserve pour compat Timeline.")]
+    [Min(1)] public int heticTextScale = 3;
+
     public override Playable CreatePlayable(PlayableGraph graph, GameObject owner)
     {
         var playable = ScriptPlayable<WallEffectBehaviour>.Create(graph);
-        var behaviour = playable.GetBehaviour();
+        FillBehaviour(playable.GetBehaviour());
+        return playable;
+    }
+
+    /// <summary>Remplit un behaviour (Playable + Preview Edit Mode).</summary>
+    public void FillBehaviour(WallEffectBehaviour behaviour)
+    {
+        if (behaviour == null) return;
 
         behaviour.kind = kind;
         behaviour.primaryColor = primaryColor;
@@ -302,7 +326,6 @@ public class WallEffectClip : PlayableAsset
         behaviour.wordHeightRatio = wordHeightRatio;
         behaviour.wordColor = wordColor;
 
-        // La derniere phase dure du flash a la fin du clip.
         behaviour.figurePhaseDuration = Mathf.Max(0.5f, 7f - phaseFlashEnd);
 
         behaviour.ringSpeed = ringSpeed;
@@ -312,10 +335,15 @@ public class WallEffectClip : PlayableAsset
         behaviour.chromeSurface = chromeSurface;
         behaviour.chromeTint = chromeTint;
 
+        behaviour.heticShapeInterval = Mathf.Max(0.05f, heticShapeInterval);
+        behaviour.heticHoldBeforeType = Mathf.Max(0f, heticHoldBeforeType);
+        behaviour.heticTypeInterval = Mathf.Max(0.05f, heticTypeInterval);
+        behaviour.heticLogoColor = heticLogoColor;
+        behaviour.heticTextScale = Mathf.Max(1, heticTextScale);
+
         behaviour.bodyTextBand = PixelFont.BuildBand(bodyText);
         behaviour.bodyTextLetters = string.IsNullOrEmpty(bodyText) ? 1 : bodyText.Length;
 
-        // Le parcours de dalles est calcule une seule fois, pas a chaque frame.
         bool[][] trailBand = PixelFont.BuildBand(trailWord);
         DancerSprites.BuildTrail(
             trailBand,
@@ -325,9 +353,40 @@ public class WallEffectClip : PlayableAsset
             out behaviour.trailCols,
             out behaviour.trailRows);
 
-        // La bande de texte est construite une seule fois, ici, et pas a chaque frame.
         behaviour.textBand = PixelFont.BuildBand(text);
+    }
 
-        return playable;
+    /// <summary>Applique le clip sur le mur (Preview Timeline Edit Mode).</summary>
+    public void ApplyToWall(LedWallVisualizer wall, float localTime)
+    {
+        if (wall == null || !wall.IsBuilt || wall.EntityManager == null) return;
+        if (!WallMapping.IsInitialized) return;
+
+        var behaviour = new WallEffectBehaviour();
+        FillBehaviour(behaviour);
+
+        var entityManager = wall.EntityManager;
+        int cols = WallMapping.Columns;
+        int rows = WallMapping.VisibleRows;
+        var pixels = new Color[cols * rows];
+
+        wall.SetSuppressSingleUpdates(true);
+        for (int row = 0; row < rows; row++)
+        {
+            int texRow = rows - 1 - row;
+            for (int col = 0; col < cols; col++)
+            {
+                Color c = behaviour.Evaluate(col, row, cols, rows, localTime);
+                pixels[texRow * cols + col] = c;
+                int? id = WallMapping.EntityIdForCell(row, col);
+                if (!id.HasValue) continue;
+                entityManager.SetColorSilent(
+                    id.Value,
+                    (byte)Mathf.Clamp(Mathf.RoundToInt(c.r * 255f), 0, 255),
+                    (byte)Mathf.Clamp(Mathf.RoundToInt(c.g * 255f), 0, 255),
+                    (byte)Mathf.Clamp(Mathf.RoundToInt(c.b * 255f), 0, 255));
+            }
+        }
+        wall.ApplyDisplayPixels(pixels);
     }
 }

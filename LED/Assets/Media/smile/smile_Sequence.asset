@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c748abd1650b463db6ee32d76e82822d, type: 3}
+  m_Name: smile_Sequence
+  m_EditorClassIdentifier: Assembly-CSharp::WallMediaSequence
+  frames:
+  - {fileID: 2800000, guid: 71ddfea82eb144b2b2926ecd4c6f82f7, type: 3}
+  - {fileID: 2800000, guid: 4b4b83ab13474313b6294c7d34c05957, type: 3}
+  - {fileID: 2800000, guid: 6c2cbef77c5c47dab9c9a33ae9bf9f28, type: 3}
+  - {fileID: 2800000, guid: ceab670684b948389e6a6349d55f4131, type: 3}
+  framesPerSecond: 10
+  loop: 1

@@ -38,6 +38,10 @@ public class SceneBuilder : MonoBehaviour
     private LedWallTextPainter _textPainter;
     private bool _built;
 
+    public LedWallVisualizer WallVisualizer => _wallVisualizer;
+    public LedWallTextPainter TextPainter => _textPainter;
+    public bool IsWallBuilt => _built && _wallVisualizer != null && _wallVisualizer.IsBuilt;
+
     /// <summary>Construit mur/devices/bindings pour Preview Timeline Edit Mode (= même rendu que Play).</summary>
     public void EnsureBuiltForTimelinePreview()
     {

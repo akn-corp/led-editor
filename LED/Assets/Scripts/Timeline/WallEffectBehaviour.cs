@@ -80,6 +80,12 @@ public class WallEffectBehaviour : PlayableBehaviour
     public Color chromeTint = new Color(0.75f, 0.82f, 0.95f);
     private LiquidChromeField _chrome;
 
+    public float heticShapeInterval = 0.18f;
+    public float heticHoldBeforeType = 0.2f;
+    public float heticTypeInterval = 0.12f;
+    public Color heticLogoColor = Color.white;
+    public int heticTextScale = 3;
+
     public float ringSpeed = 78f;
     public Color ringCore = new Color(0.55f, 0.80f, 1f);
     public Color ringAccent = new Color(1f, 0.75f, 0.30f);
@@ -150,6 +156,9 @@ public class WallEffectBehaviour : PlayableBehaviour
 
             case WallEffectKind.SonicRings:
                 return EvaluateSonicRings(column, row, columns, rows, localTime);
+
+            case WallEffectKind.HeticLogoBuild:
+                return EvaluateHeticLogoBuild(column, row, columns, rows, localTime);
 
             default:
                 return Color.black;
@@ -302,6 +311,167 @@ public class WallEffectBehaviour : PlayableBehaviour
     {
         FetchAudio(localTime);
         return FireworkPhase(column, row, columns, rows, localTime);
+    }
+
+    /// <summary>
+    /// Assemble le symbole HETIC forme par forme (ordre de lecture), puis
+    /// tape le mot HETIC (glyphes du vrai logo) lettre par lettre, centre.
+    /// Chaque forme : scale elastique + glow, avec stagger rapide.
+    /// Orientation native : row = 0 en HAUT.
+    /// </summary>
+    private Color EvaluateHeticLogoBuild(int column, int row, int columns, int rows, float localTime)
+    {
+        float shapeInterval = Mathf.Max(0.05f, heticShapeInterval);
+        float typeInterval = Mathf.Max(0.05f, heticTypeInterval);
+        float hold = Mathf.Max(0f, heticHoldBeforeType);
+        float popDur = Mathf.Max(0.06f, shapeInterval * 0.85f);
+
+        float shapesDoneAt = HeticMark.ShapeCount * shapeInterval;
+        float typeStart = shapesDoneAt + hold;
+        int lettersShown = 0;
+        if (localTime >= typeStart)
+        {
+            lettersShown = Mathf.Clamp(
+                Mathf.FloorToInt((localTime - typeStart) / typeInterval) + 1,
+                0,
+                HeticWord.LetterCount);
+        }
+
+        // Bloc symbole + mot, centres sur le meme axe vertical.
+        int markSide = Mathf.Max(8, Mathf.Min(
+            Mathf.FloorToInt(columns * 0.72f),
+            Mathf.FloorToInt(rows * 0.50f)));
+        // Largeur du mot ~ meme ratio que sur le PNG (texte ≈ symbole).
+        int wordW = Mathf.Max(8, Mathf.RoundToInt(markSide * 0.98f));
+        int wordH = Mathf.Max(4, Mathf.RoundToInt(wordW * (HeticWord.Height / (float)HeticWord.Width)));
+        int gap = Mathf.Max(2, rows / 40);
+        int blockH = markSide + gap + wordH;
+        int markY0 = Mathf.Max(1, (rows - blockH) / 2);
+        int markX0 = (columns - markSide) / 2;
+        int wordX0 = (columns - wordW) / 2;
+        int wordY0 = markY0 + markSide + gap;
+
+        // --- Symbole (pop elastique + glow) ---
+        if (column >= markX0 && column < markX0 + markSide &&
+            row >= markY0 && row < markY0 + markSide)
+        {
+            float mx = (column - markX0 + 0.5f) * HeticMark.Size / markSide;
+            float my = (row - markY0 + 0.5f) * HeticMark.Size / markSide;
+
+            Color best = backgroundColor;
+            float bestGlow = -1f;
+            var grid = HeticMark.Grid();
+
+            for (int shapeId = 1; shapeId <= HeticMark.ShapeCount; shapeId++)
+            {
+                float appearAt = (shapeId - 1) * shapeInterval;
+                if (localTime < appearAt)
+                    continue;
+
+                float age = localTime - appearAt;
+                float popT = Mathf.Clamp01(age / popDur);
+                float scale = HeticPopScale(popT);
+                float glow = HeticPopGlow(popT);
+
+                Vector2 center = HeticMark.CenterOf(shapeId);
+                float sx = center.x + (mx - center.x) / scale;
+                float sy = center.y + (my - center.y) / scale;
+                int ix = Mathf.RoundToInt(sx - 0.5f);
+                int iy = Mathf.RoundToInt(sy - 0.5f);
+                if (ix < 0 || iy < 0 || ix >= HeticMark.Size || iy >= HeticMark.Size)
+                    continue;
+                if (grid[iy][ix] != shapeId)
+                    continue;
+
+                if (glow >= bestGlow)
+                {
+                    bestGlow = glow;
+                    best = heticLogoColor * (1f + glow);
+                    best.a = 1f;
+                }
+            }
+
+            if (bestGlow >= 0f)
+                return best;
+        }
+
+        // --- Mot HETIC (vrai logo), typing lettre par lettre ---
+        if (lettersShown <= 0)
+            return backgroundColor;
+
+        if (column >= wordX0 && column < wordX0 + wordW &&
+            row >= wordY0 && row < wordY0 + wordH)
+        {
+            int wx = Mathf.Clamp((column - wordX0) * HeticWord.Width / wordW, 0, HeticWord.Width - 1);
+            int wy = Mathf.Clamp((row - wordY0) * HeticWord.Height / wordH, 0, HeticWord.Height - 1);
+            byte letterId = HeticWord.Grid()[wy][wx];
+            if (letterId > 0 && letterId <= lettersShown)
+                return heticLogoColor;
+
+            // Curseur apres la derniere lettre visible.
+            if (lettersShown < HeticWord.LetterCount)
+            {
+                float blink = Mathf.Repeat(localTime * 3f, 1f);
+                if (blink < 0.5f)
+                {
+                    // Position approx. juste apres la lettre N (en colonnes grille mot).
+                    int cursorCol = HeticWordCursorCol(lettersShown);
+                    int cx0 = wordX0 + cursorCol * wordW / HeticWord.Width;
+                    int cx1 = wordX0 + (cursorCol + 2) * wordW / HeticWord.Width;
+                    if (column >= cx0 && column < cx1)
+                        return heticLogoColor * 0.9f;
+                }
+            }
+        }
+
+        return backgroundColor;
+    }
+
+    /// <summary>Colonne grille du curseur apres <paramref name="lettersShown"/> lettres.</summary>
+    private static int HeticWordCursorCol(int lettersShown)
+    {
+        var grid = HeticWord.Grid();
+        int maxX = 0;
+        for (int y = 0; y < HeticWord.Height; y++)
+        {
+            for (int x = 0; x < HeticWord.Width; x++)
+            {
+                byte id = grid[y][x];
+                if (id > 0 && id <= lettersShown)
+                    maxX = Mathf.Max(maxX, x);
+            }
+        }
+        return Mathf.Min(HeticWord.Width - 1, maxX + 2);
+    }
+
+    /// <summary>Scale elastique : part petit (~0.15), overshoot ~1.18, revient a 1.</summary>
+    private static float HeticPopScale(float t)
+    {
+        t = Mathf.Clamp01(t);
+        if (t >= 1f) return 1f;
+
+        const float start = 0.12f;
+        const float peak = 1.18f;
+
+        if (t < 0.65f)
+        {
+            float u = t / 0.65f;
+            u = 1f - (1f - u) * (1f - u); // ease-out quad
+            return Mathf.Lerp(start, peak, u);
+        }
+
+        float v = (t - 0.65f) / 0.35f;
+        v = v * v * (3f - 2f * v); // smoothstep
+        return Mathf.Lerp(peak, 1f, v);
+    }
+
+    /// <summary>Glow qui pic vers le milieu du pop puis retombe a 0.</summary>
+    private static float HeticPopGlow(float t)
+    {
+        t = Mathf.Clamp01(t);
+        if (t >= 1f) return 0f;
+        float envelope = Mathf.Sin(t * Mathf.PI);
+        return 0.55f * envelope * envelope;
     }
 
     private Color EvaluateSequenceA3(int column, int row, int columns, int rows, float localTime)

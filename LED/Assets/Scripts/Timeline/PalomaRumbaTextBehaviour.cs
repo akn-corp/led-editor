@@ -149,7 +149,7 @@ public class PalomaRumbaTextBehaviour : PlayableBehaviour
         if (visualizer != null)
             _visualizer = visualizer;
         if (_visualizer == null)
-            _visualizer = Object.FindFirstObjectByType<LedWallVisualizer>();
+            _visualizer = RippleWaveBehaviour.FindLedWallVisualizer();
         if (_visualizer == null)
         {
             Debug.LogWarning("[PalomaRumba] LedWallVisualizer introuvable — mur pas encore construit.");
